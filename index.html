@@ -1,1307 +1,2288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexus Match — Find Your Co-Owner | Citizens Financial</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{--navy:#1B3A6B;--blue:#1D6FA4;--green:#5AB034;--gold:#F5A623;--white:#FFFFFF;--light:#F4F7FA;--mid:#64748B;--dark:#1E293B;--border:#E2E8F0;--shadow:0 4px 24px rgba(27,58,107,0.11);--radius:12px;}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Segoe UI',Arial,sans-serif;background:var(--light);color:var(--dark);overflow-x:hidden;}
-.hidden{display:none!important;}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 28px;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer;border:none;transition:all 0.2s;line-height:1;}
-.btn-sm{padding:9px 18px;font-size:13px;}
-.btn-primary{background:var(--green);color:white;}
-.btn-primary:hover{background:#489029;transform:translateY(-1px);box-shadow:0 6px 20px rgba(90,176,52,0.3);}
-.btn-navy{background:var(--navy);color:white;}
-.btn-navy:hover{background:#142d57;transform:translateY(-1px);}
-.btn-outline{background:transparent;color:var(--navy);border:2px solid var(--navy);}
-.btn-outline:hover{background:var(--navy);color:white;}
-.btn-ghost{background:transparent;color:rgba(255,255,255,0.8);border:2px solid rgba(255,255,255,0.3);}
-.btn-ghost:hover{background:rgba(255,255,255,0.15);color:white;border-color:rgba(255,255,255,0.6);}
-.btn-block{width:100%;}
-nav{background:var(--navy);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;position:fixed;top:0;width:100%;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,0.2);}
-.nav-logo{color:white;font-weight:900;font-size:21px;letter-spacing:-0.5px;cursor:pointer;display:flex;align-items:center;gap:10px;}
-.nav-logo .logo-mark{background:var(--green);color:white;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;}
-.nav-logo span{color:var(--gold);}
-.nav-right{display:flex;gap:12px;align-items:center;}
-.nav-link-text{color:rgba(255,255,255,0.75);font-size:14px;font-weight:500;cursor:pointer;padding:6px 12px;border-radius:6px;transition:all 0.15s;}
-.nav-link-text:hover{color:white;background:rgba(255,255,255,0.1);}
-.nav-user{display:flex;align-items:center;gap:10px;color:white;font-size:14px;font-weight:600;}
-.nav-avatar{width:36px;height:36px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;}
-/* LANDING */
-#view-landing{padding-top:64px;}
-.hero{background:linear-gradient(135deg,#0d2247 0%,var(--navy) 45%,var(--blue) 100%);padding:88px 40px 72px;color:white;text-align:center;position:relative;overflow:hidden;}
-.hero::after{content:'';position:absolute;bottom:-2px;left:0;width:100%;height:80px;background:var(--light);clip-path:ellipse(55% 100% at 50% 100%);}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(90,176,52,0.18);border:1px solid rgba(90,176,52,0.5);color:#7EDB4A;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:22px;letter-spacing:.8px;}
-.hero h1{font-size:50px;font-weight:900;line-height:1.08;margin-bottom:22px;max-width:720px;margin-left:auto;margin-right:auto;}
-.hero h1 em{color:var(--gold);font-style:normal;}
-.hero p{font-size:18px;opacity:.82;max-width:540px;margin:0 auto 38px;line-height:1.65;}
-.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:64px;}
-.hero-stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap;padding-top:40px;border-top:1px solid rgba(255,255,255,0.13);}
-.hero-stat-num{font-size:34px;font-weight:900;color:var(--gold);}
-.hero-stat-label{font-size:13px;opacity:.65;margin-top:3px;}
-.showcase{padding:72px 40px 56px;background:var(--light);}
-.section-label{text-align:center;font-size:12px;font-weight:700;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:10px;}
-.section-title{text-align:center;font-size:32px;font-weight:800;color:var(--navy);margin-bottom:10px;}
-.section-sub{text-align:center;color:var(--mid);font-size:16px;margin-bottom:48px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.6;}
-.sample-cards{display:flex;gap:20px;max-width:1080px;margin:0 auto;overflow-x:auto;padding-bottom:8px;justify-content:center;flex-wrap:wrap;}
-.sample-card{background:white;border-radius:16px;overflow:hidden;border:2px solid var(--border);width:240px;flex-shrink:0;transition:all 0.22s;cursor:pointer;}
-.sample-card:hover{border-color:var(--blue);box-shadow:var(--shadow);transform:translateY(-5px);}
-.sc-top{padding:22px 18px;color:white;text-align:center;}
-.sc-avatar{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.2);border:3px solid rgba(255,255,255,0.45);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;margin:0 auto 10px;}
-.sc-name{font-size:15px;font-weight:700;}
-.sc-title{font-size:12px;opacity:.78;margin-top:2px;}
-.sc-match{background:var(--green);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;display:inline-block;margin-top:8px;}
-.sc-body{padding:14px 16px;}
-.sc-detail{font-size:12px;color:var(--mid);margin-bottom:5px;}
-.sc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;}
-.sc-tag{font-size:10px;padding:3px 8px;border-radius:8px;background:#EBF5FF;color:var(--blue);font-weight:600;}
-.features{padding:72px 40px;background:white;}
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;max-width:1080px;margin:0 auto;}
-.feat-card{padding:26px;border-radius:var(--radius);border:2px solid var(--border);transition:all 0.2s;}
-.feat-card:hover{border-color:var(--blue);box-shadow:var(--shadow);}
-.feat-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;}
-.feat-card h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:7px;}
-.feat-card p{font-size:13px;color:var(--mid);line-height:1.6;}
-.how{padding:72px 40px;background:var(--light);}
-.steps-row{display:flex;gap:0;max-width:980px;margin:0 auto;flex-wrap:wrap;justify-content:center;}
-.step-item{flex:1;min-width:140px;text-align:center;padding:18px 14px;position:relative;}
-.step-item:not(:last-child)::after{content:'→';position:absolute;right:-10px;top:28px;font-size:20px;color:var(--border);}
-.step-num{width:50px;height:50px;border-radius:50%;background:var(--navy);color:white;font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
-.step-item h4{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px;}
-.step-item p{font-size:12px;color:var(--mid);line-height:1.5;}
-.cta-band{background:linear-gradient(135deg,var(--navy),var(--blue));padding:72px 40px;text-align:center;color:white;}
-.cta-band h2{font-size:36px;font-weight:800;margin-bottom:14px;}
-.cta-band p{font-size:17px;opacity:.8;margin-bottom:36px;max-width:480px;margin-left:auto;margin-right:auto;}
-footer{background:#0d2247;padding:32px 40px;color:rgba(255,255,255,.45);font-size:12px;text-align:center;line-height:1.9;}
-footer strong{color:rgba(255,255,255,.7);}
-/* AUTH MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);}
-.modal-box{background:white;border-radius:18px;width:100%;max-width:450px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.3);}
-.modal-head{background:var(--navy);padding:28px 32px 24px;color:white;}
-.modal-head h2{font-size:22px;font-weight:800;}
-.modal-head p{font-size:13px;opacity:.72;margin-top:5px;}
-.modal-tabs{display:flex;}
-.mtab{flex:1;padding:13px;text-align:center;font-size:14px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;color:var(--mid);background:var(--light);transition:all 0.15s;}
-.mtab.active{color:var(--navy);border-bottom-color:var(--navy);background:white;}
-.modal-body{padding:28px 32px;}
-.fg{margin-bottom:17px;}
-.fg label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;letter-spacing:.5px;}
-.fg input,.fg select{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:14px;color:var(--dark);outline:none;transition:border-color 0.15s;background:white;}
-.fg input:focus,.fg select:focus{border-color:var(--blue);}
-.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.modal-err{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;}
-.modal-info{background:#EBF5FF;border:1px solid #BFDBFE;color:var(--blue);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;}
-/* ONBOARDING */
-#view-onboarding{padding-top:64px;min-height:100vh;background:var(--light);}
-.ob-wrap{max-width:660px;margin:0 auto;padding:40px 24px 80px;}
-.ob-prog-labels{display:flex;justify-content:space-between;margin-bottom:6px;}
-.ob-prog-labels span{font-size:12px;color:var(--mid);}
-.ob-prog-labels strong{font-size:12px;color:var(--navy);font-weight:700;}
-.ob-prog-bar{background:var(--border);border-radius:4px;height:7px;overflow:hidden;margin-bottom:30px;}
-.ob-prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:4px;transition:width 0.4s ease;}
-.ob-card{background:white;border-radius:16px;padding:36px;box-shadow:var(--shadow);}
-.ob-card h2{font-size:23px;font-weight:800;color:var(--navy);margin-bottom:7px;}
-.ob-card .ob-sub{font-size:14px;color:var(--mid);margin-bottom:26px;line-height:1.55;}
-.ob-nav{display:flex;gap:12px;margin-top:28px;align-items:center;}
-.ob-nav-back{font-size:13px;color:var(--mid);cursor:pointer;font-weight:600;padding:8px;}
-.ob-nav-back:hover{color:var(--navy);}
-.hobby-grid{display:flex;flex-wrap:wrap;gap:9px;margin-top:8px;}
-.hchip{padding:9px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:2px solid var(--border);background:white;transition:all 0.15s;user-select:none;}
-.hchip:hover{border-color:var(--blue);}
-.hchip.sel{border-color:var(--green);background:#EDFAE3;color:#2e7d1a;}
-.county-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
-.county-opt{padding:13px 16px;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.15s;}
-.county-opt.sel{border-color:var(--blue);background:#EBF5FF;}
-.county-opt strong{display:block;font-size:14px;color:var(--navy);}
-.county-opt span{font-size:12px;color:var(--mid);}
-.pref-row{display:flex;gap:9px;flex-wrap:wrap;}
-.pref-btn{padding:10px 18px;border:2px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:white;transition:all 0.15s;}
-.pref-btn:hover,.pref-btn.sel{border-color:var(--blue);background:#EBF5FF;color:var(--blue);}
-.range-display{text-align:center;font-size:30px;font-weight:800;color:var(--navy);margin:12px 0 6px;}
-.range-display sub{font-size:15px;color:var(--mid);font-weight:400;}
-input[type=range]{width:100%;-webkit-appearance:none;height:7px;border-radius:4px;background:linear-gradient(90deg,var(--blue) var(--pct,50%),var(--border) var(--pct,50%));outline:none;cursor:pointer;border:none;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--navy);cursor:pointer;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.2);}
-.range-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--mid);margin-top:4px;}
-/* PRE-APPROVAL */
-#view-preapproval{padding-top:64px;min-height:100vh;background:var(--light);}
-.pa-wrap{max-width:720px;margin:0 auto;padding:40px 24px 80px;}
-.pa-hero{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:18px;padding:40px;color:white;text-align:center;margin-bottom:26px;}
-.pa-badge{display:inline-block;background:var(--green);color:white;font-size:12px;font-weight:700;padding:5px 16px;border-radius:20px;margin-bottom:14px;letter-spacing:1px;}
-.pa-hero h2{font-size:28px;font-weight:800;margin-bottom:6px;}
-.pa-amount{font-size:54px;font-weight:900;color:var(--gold);line-height:1.1;margin:14px 0 4px;}
-.pa-amount-label{font-size:13px;opacity:.7;}
-.pa-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px;}
-.pa-card{background:white;border-radius:12px;padding:22px;box-shadow:var(--shadow);}
-.pa-card-label{font-size:11px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;}
-.pa-card-val{font-size:26px;font-weight:800;color:var(--navy);}
-.pa-card-sub{font-size:12px;color:var(--mid);margin-top:4px;}
-.pa-card.highlight{border:2px solid var(--green);}
-.pa-card.highlight .pa-card-val{color:var(--green);}
-.pa-profile-card{background:white;border-radius:14px;padding:26px;box-shadow:var(--shadow);margin-bottom:26px;}
-.pa-profile-card h3{font-size:17px;font-weight:700;color:var(--navy);border-bottom:2px solid var(--border);padding-bottom:12px;margin-bottom:18px;}
-.attrs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.attr-item .al{font-size:11px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;}
-.attr-item .av{font-size:14px;font-weight:600;color:var(--dark);}
-.hobbies-row{display:flex;flex-wrap:wrap;gap:6px;padding-top:14px;border-top:1px solid var(--border);margin-top:14px;}
-.htag{font-size:12px;padding:5px 12px;border-radius:12px;background:#EDFAE3;color:#2e7d1a;font-weight:600;}
-.pa-cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-/* APP */
-#view-app{padding-top:64px;min-height:100vh;}
-.app-subnav{background:white;border-bottom:2px solid var(--border);padding:0 32px;display:flex;align-items:center;gap:0;height:50px;position:sticky;top:64px;z-index:100;}
-.asnav-link{height:50px;display:flex;align-items:center;padding:0 18px;font-size:14px;font-weight:600;color:var(--mid);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.15s;}
-.asnav-link:hover{color:var(--navy);}
-.asnav-link.active{color:var(--navy);border-bottom-color:var(--navy);}
-.matches-wrap{max-width:1120px;margin:0 auto;padding:28px 24px;}
-.matches-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;flex-wrap:wrap;gap:12px;}
-.matches-top h2{font-size:22px;font-weight:800;color:var(--navy);}
-.matches-top p{font-size:14px;color:var(--mid);margin-top:3px;}
-.filter-section{background:white;border-radius:12px;padding:18px 20px;margin-bottom:22px;box-shadow:var(--shadow);}
-.filter-section-title{font-size:12px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
-.filter-chips{display:flex;flex-wrap:wrap;gap:8px;}
-.fchip{padding:7px 15px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:2px solid var(--border);background:white;transition:all 0.15s;}
-.fchip:hover{border-color:var(--blue);}
-.fchip.active{border-color:var(--blue);background:#EBF5FF;color:var(--blue);}
-.matches-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px;}
-.pcard{background:white;border-radius:14px;overflow:hidden;border:2px solid var(--border);transition:all 0.22s;cursor:pointer;}
-.pcard:hover{border-color:var(--blue);box-shadow:var(--shadow);transform:translateY(-3px);}
-.pcard-top{padding:20px 18px;display:flex;gap:14px;align-items:center;color:white;}
-.pcard-avatar{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.22);border:2px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;flex-shrink:0;}
-.pcard-info{flex:1;min-width:0;}
-.pcard-info h3{font-size:16px;font-weight:700;}
-.pcard-info .pci-sub{font-size:12px;opacity:.78;margin-top:2px;}
-.pcard-score{text-align:right;flex-shrink:0;}
-.pcard-score-num{font-size:26px;font-weight:900;color:var(--gold);line-height:1;}
-.pcard-score-label{font-size:10px;opacity:.7;margin-top:1px;}
-.pcard-body{padding:16px 18px;}
-.pcard-row{display:flex;gap:16px;margin-bottom:12px;}
-.pcard-item .pci-lbl{font-size:10px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px;}
-.pcard-item .pci-val{font-size:13px;font-weight:600;color:var(--dark);}
-.dim-bars{margin-bottom:12px;}
-.dim-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
-.dim-lbl{font-size:10px;color:var(--mid);width:100px;flex-shrink:0;}
-.dim-bar{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
-.dim-fill{height:100%;border-radius:3px;}
-.dim-pct{font-size:10px;font-weight:700;color:var(--mid);width:28px;text-align:right;}
-.pcard-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
-.ptag{font-size:10px;padding:3px 9px;border-radius:10px;background:#EBF5FF;color:var(--blue);font-weight:600;}
-.connect-btn{width:100%;padding:10px;background:var(--navy);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:background 0.2s;}
-.connect-btn:hover{background:var(--blue);}
-.connect-btn.connected{background:#EDFAE3;color:#2e7d1a;border:2px solid #2e7d1a;}
-/* PROFILE DETAIL */
-.pd-wrap{max-width:700px;margin:0 auto;padding:28px 24px 80px;}
-.back-row{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:var(--navy);cursor:pointer;margin-bottom:20px;}
-.back-row:hover{color:var(--blue);}
-.pd-hero-card{border-radius:16px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px;}
-.pd-hero-top{padding:30px;display:flex;gap:22px;align-items:center;color:white;}
-.pd-avatar{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,0.22);border:3px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;flex-shrink:0;}
-.pd-info{flex:1;}
-.pd-info h2{font-size:26px;font-weight:800;}
-.pd-info .pd-sub{font-size:14px;opacity:.8;margin-top:4px;}
-.pd-info .pd-loc{font-size:13px;opacity:.7;margin-top:3px;}
-.pd-score-block{text-align:center;flex-shrink:0;}
-.pd-score-num{font-size:44px;font-weight:900;color:var(--gold);line-height:1;}
-.pd-score-label{font-size:11px;opacity:.7;margin-top:2px;}
-.pd-section{background:white;border-radius:12px;padding:22px 24px;margin-bottom:16px;box-shadow:var(--shadow);}
-.pd-section h4{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--border);}
-.pd-attrs{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.compat-bars{display:flex;flex-direction:column;gap:10px;}
-.compat-row{display:flex;align-items:center;gap:12px;}
-.compat-label{font-size:13px;color:var(--dark);font-weight:600;width:160px;flex-shrink:0;}
-.compat-bar-wrap{flex:1;height:10px;background:var(--border);border-radius:5px;overflow:hidden;}
-.compat-bar-fill{height:100%;border-radius:5px;}
-.compat-pct{font-size:13px;font-weight:800;width:36px;text-align:right;flex-shrink:0;}
-.pd-hobbies{display:flex;flex-wrap:wrap;gap:8px;}
-.pd-htag{font-size:13px;padding:6px 14px;border-radius:12px;background:#EDFAE3;color:#2e7d1a;font-weight:600;}
-.pd-shared-htag{background:#FFF8E7;color:#B37D00;}
-.pd-action-row{display:flex;gap:12px;flex-wrap:wrap;}
-.my-profile-wrap{max-width:660px;margin:0 auto;padding:28px 24px 80px;}
-/* CONNECT MODAL */
-.connect-modal-box{max-width:420px;}
-.connect-modal-body{padding:28px 32px;text-align:center;}
-.connect-modal-avatar{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:white;margin:0 auto 14px;}
-.connect-modal-body h3{font-size:20px;font-weight:700;color:var(--navy);margin-bottom:8px;}
-.connect-modal-body p{font-size:14px;color:var(--mid);margin-bottom:22px;line-height:1.55;}
-.connect-detail{background:var(--light);border-radius:10px;padding:14px 16px;text-align:left;margin-bottom:20px;}
-.connect-detail-row{font-size:13px;color:var(--dark);margin-bottom:6px;display:flex;gap:8px;}
-.connect-detail-row:last-child{margin-bottom:0;}
-/* LOADING SPINNER */
-.spinner-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
-.spinner{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin 0.7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.spinner-label{font-size:14px;font-weight:600;color:var(--navy);}
-/* TOAST */
-#toast{position:fixed;bottom:28px;right:28px;background:var(--navy);color:white;padding:14px 22px;border-radius:10px;font-size:14px;font-weight:600;z-index:9999;transform:translateY(100px);opacity:0;transition:all 0.3s;box-shadow:0 8px 32px rgba(0,0,0,0.3);max-width:320px;}
-#toast.show{transform:translateY(0);opacity:1;}
-#toast.success{background:var(--green);}
-#toast.warn{background:var(--gold);color:var(--dark);}
-#toast.error{background:#C0392B;}
-@media(max-width:640px){
-  .hero h1{font-size:30px;}
-  .hero-stats{gap:20px;}
-  .pa-grid{grid-template-columns:1fr;}
-  .attrs-grid{grid-template-columns:1fr;}
-  .pd-attrs{grid-template-columns:1fr;}
-  .pd-hero-top{flex-direction:column;text-align:center;}
-  nav{padding:0 16px;}
-  .ob-card{padding:24px 20px;}
-  .modal-body{padding:22px 20px;}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Match â Find Your Co-Owner | Nexus Homes Co-Ownership Â· Citizens Financial</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #F4F6FA;
+        }
+
+        /* Color Palette */
+        :root {
+            --navy: #1B3A6B;
+            --blue: #1D6FA4;
+            --green: #5AB034;
+            --gold: #F5A623;
+            --light-bg: $F4F6FA;
+            --white: #FFFFFF;
+            --gray-light: #E8EDF5;
+            --gray-text: #666;
+            --success: #5AB034;
+            --warning: #F5A623;
+            --danger: #E74C3C;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: 0 2px 8px rgba(27, 58, 107, 0.08);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-logo span:first-child {
+            color: var(--navy);
+        }
+
+        .nav-logo span:last-child {
+            color: var(--green);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--navy);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--green);
+        }
+
+        .btn-primary {
+            background: var(--green);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary:hover {
+            background: #4a9028;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(90, 176, 52, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--green);
+            border: 2px solid var(--green);
+            padding: 0.65rem 1.3rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .btn-outline:hover {
+            background: var(--green);
+            color: var(--white);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--green));
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 70px;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            color: var(--white);
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-ctas .btn-primary {
+            background: var(--green);
+        }
+
+        .hero-ctas .btn-outline {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--white);
+            color: var(--white);
+        }
+
+        .hero-ctas .btn-outline:hover {
+            background: var(--white);
+            color: var(--navy);
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: 2.5rem;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        section .subtitle {
+            font-size: 1.1rem;
+            color: var(--gray-text);
+            margin-bottom: 2rem;
+        }
+
+        /* Problem Section */
+        .problem-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .problem-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--green);
+            box-shadow: 0 2px 8px rgba(27, 58, 107, 0.1);
+        }
+
+        .problem-card h4 {
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .problem-card .median {
+            color: var(--green);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .problem-card .rent {
+            color: var(--gray-text);
+            font-size: 0.9rem;
+        }
+
+        /* Collision Section */
+        .collision-cols {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .collision-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(27, 58, 107, 0.08);
+            text-align: center;
+        }
+
+        .collision-card h3 {
+            color: var(--navy);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .collision-card p {
+            color: var(--gray-text);
+            line-height: 1.6;
+        }
+
+        /* Dimensions Section */
+        .dimensions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .dimension-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-top: 4px solid var(--blue);
+            box-shadow: 0 2px 8px rgba(27, 58, 107, 0.08);
+        }
+
+        .dimension-card h4 {
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .dimension-weight {
+            color: var(--green);
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dimension-card p {
+            color: var(--gray-text);
+            font-size: 0.95rem;
+        }
+
+        .clusters-section {
+            background: var(--gray-light);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .clusters-section h4 {
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+
+        .cluster-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .cluster-badge {
+            background: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            border-left: 3px solid var(--green);
+            font-weight: 600;
+            color: var(--navy);
+            font-size: 0.9rem;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            margin-top: 2rem;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(27, 58, 107, 0.08);
+        }
+
+        th {
+            background: var(--navy);
+            color: var(--white);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: var(--light-bg);
+        }
+
+        /* Match Cards */
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .match-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(27, 58, 107, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .match-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(27, 58, 107, 0.15);
+        }
+
+        .match-header {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--green) 100%);
+            padding: 1.5rem;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .match-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 auto 0.5rem;
+        }
+
+        .match-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .match-profession {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .match-score {
+            display: inline-block;
+            background: var(--white);
+            color: var(--navy);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        .match-score.high {
+            color: var(--green);
+        }
+
+        .match-score.medium {
+            color: var(--gold);
+        }
+
+        .match-body {
+            padding: 1.5rem;
+        }
+
+        .match-location {
+            color: var(--gray-text);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .match-bio {
+            color: var(--gray-text);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .match-cluster {
+            display: inline-block;
+            background: var(--gray-light);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            color: var(--navy);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .match-hobbies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hobby-tag {
+            background: var(--light-bg);
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--navy);
+            font-weight: 500;
+        }
+
+        .nexus-lock {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(245, 166, 35, 0.3);
+        }
+
+        .dimension-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bar-label {
+            min-width: 60px;
+            color: var(--gray-text);
+            font-weight: 500;
+        }
+
+        .bar-fill {
+            flex: 1;
+            height: 6px;
+            background: var(--gray-light);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .bar-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue), var(--green));
+            border-radius: 3px;
+        }
+
+        .bar-percent {
+            color: var(--navy);
+            font-weight: 600;
+            min-width: 30px;
+            text-align: right;
+        }
+
+        .match-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .match-budget {
+            color: var(--gray-text);
+            font-size: 0.85rem;
+        }
+
+        .btn-small {
+            background: var(--green);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn-small:hover {
+            background: #4a9028;
+        }
+
+        /* Process Steps */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--green);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        .step h4 {
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .step p {
+            color: var(--gray-text);
+            font-size: 0.95rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            color: var(--white);
+            text-align: center;
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .cta-section h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--navy);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--navy);
+            font-size: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-text);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--gray-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            color: var(--gray-text);
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--green);
+            border-bottom-color: var(--green);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--navy);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(90, 176, 52, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner.active {
+            display: flex;
+        }
+
+        .spinner-content {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            z-index: 2500;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--green);
+            color: var(--green);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+            color: var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        /* Views */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* Profile Detail View */
+        .profile-detail {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(27, 58, 107, 0.1);
+            margin-top: 2rem;
+        }
+
+        .profile-hero {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--green) 100%);
+            padding: 2rem;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .profile-score {
+            display: inline-block;
+            background: var(--white);
+            color: var(--navy);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .profile-content {
+            padding: 2rem;
+        }
+
+        .profile-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .profile-section:last-child {
+            border-bottom: none;
+        }
+
+        .profile-section h4 {
+            color: var(--navy);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .compatibility-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .compat-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .compat-label {
+            min-width: 120px;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .compat-fill {
+            flex: 1;
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .compat-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue), var(--green));
+        }
+
+        .compat-percent {
+            min-width: 40px;
+            text-align: right;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .info-item {
+            background: var(--light-bg);
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        .info-label {
+            color: var(--gray-text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-value {
+            color: var(--navy);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            section h2 {
+                font-size: 1.8rem;
+            }
+
+            nav {
+                padding: 1rem;
+            }
+
+            .nav-logo {
+                font-size: 1.2rem;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-ctas {
+                flex-direction: column;
+            }
+
+            .hero-ctas button {
+                width: 100%;
+            }
+
+            .matches-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-logo" onclick="showView('landing')">
-    <div class="logo-mark">N</div>Nexus <span>Match</span>
-  </div>
-  <div class="nav-right" id="nav-guest">
-    <span class="nav-link-text" onclick="openAuth('login')">Log In</span>
-    <button class="btn btn-primary btn-sm" onclick="openAuth('register')">Get Started</button>
-  </div>
-  <div class="nav-right hidden" id="nav-user-area">
-    <div class="nav-user">
-      <div class="nav-avatar" id="nav-avatar" onclick="showAppView('my-profile')">?</div>
-      <span id="nav-name">User</span>
-    </div>
-    <button class="btn btn-ghost btn-sm" onclick="logout()">Sign Out</button>
-  </div>
-</nav>
-
-<!-- LANDING -->
-<div id="view-landing">
-  <section class="hero">
-    <div class="hero-badge">🏠 NEXUS MATCH — CITIZENS FINANCIAL</div>
-    <h1>Find Your <em>Perfect Co-Owner.</em><br>Own Together. Build Wealth.</h1>
-    <p>The smarter way for California's workforce to stop renting and start owning — matched by career, lifestyle, location, and goals.</p>
-    <div class="hero-cta">
-      <button class="btn btn-primary" onclick="openAuth('register')" style="font-size:16px;padding:15px 36px;">Find My Co-Owner →</button>
-      <button class="btn btn-ghost" onclick="openAuth('login')">I Have an Account</button>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="hero-stat-num">94%</div><div class="hero-stat-label">Avg. Match Score</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">$0</div><div class="hero-stat-label">Out-of-Pocket Option</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">1,400+</div><div class="hero-stat-label">Active Members</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">9 Counties</div><div class="hero-stat-label">Covered in California</div></div>
-    </div>
-  </section>
-  <section class="showcase">
-    <div class="section-label">Sample Matches</div>
-    <div class="section-title">Real Professionals. Real Co-Ownership.</div>
-    <div class="section-sub">Browse how California professionals are finding compatible co-owners in their city or county.</div>
-    <div class="sample-cards">
-      <div class="sample-card" onclick="openAuth('register')">
-        <div class="sc-top" style="background:linear-gradient(135deg,#1B3A6B,#1D6FA4);"><div class="sc-avatar">MR</div><div class="sc-name">Marcus R.</div><div class="sc-title">🚒 Firefighter · LA County</div><div class="sc-match">94% Match</div></div>
-        <div class="sc-body"><div class="sc-detail">💰 Income: $92K/yr</div><div class="sc-detail">🏠 Budget: up to $680K</div><div class="sc-detail">📍 Long Beach</div><div class="sc-tags"><span class="sc-tag">First Responder</span><span class="sc-tag">Hiking</span><span class="sc-tag">Gym</span></div></div>
-      </div>
-      <div class="sample-card" onclick="openAuth('register')">
-        <div class="sc-top" style="background:linear-gradient(135deg,#1D6FA4,#5AB034);"><div class="sc-avatar">JT</div><div class="sc-name">Jasmine T.</div><div class="sc-title">🏥 Registered Nurse · Orange Co.</div><div class="sc-match">88% Match</div></div>
-        <div class="sc-body"><div class="sc-detail">💰 Income: $88K/yr</div><div class="sc-detail">🏠 Budget: up to $620K</div><div class="sc-detail">📍 Anaheim</div><div class="sc-tags"><span class="sc-tag">Healthcare</span><span class="sc-tag">Yoga</span><span class="sc-tag">Cooking</span></div></div>
-      </div>
-      <div class="sample-card" onclick="openAuth('register')">
-        <div class="sc-top" style="background:linear-gradient(135deg,#5AB034,#1B3A6B);"><div class="sc-avatar">DK</div><div class="sc-name">Devon K.</div><div class="sc-title">📚 Teacher · Sacramento Co.</div><div class="sc-match">91% Match</div></div>
-        <div class="sc-body"><div class="sc-detail">💰 Income: $72K/yr</div><div class="sc-detail">🏠 Budget: up to $480K</div><div class="sc-detail">📍 Elk Grove</div><div class="sc-tags"><span class="sc-tag">Education</span><span class="sc-tag">Reading</span><span class="sc-tag">Cycling</span></div></div>
-      </div>
-      <div class="sample-card" onclick="openAuth('register')">
-        <div class="sc-top" style="background:linear-gradient(135deg,#1B3A6B,#0d4a8a);"><div class="sc-avatar">SR</div><div class="sc-name">Sofia R.</div><div class="sc-title">👮 Police Officer · Contra Costa</div><div class="sc-match">87% Match</div></div>
-        <div class="sc-body"><div class="sc-detail">💰 Income: $96K/yr</div><div class="sc-detail">🏠 Budget: up to $720K</div><div class="sc-detail">📍 Concord</div><div class="sc-tags"><span class="sc-tag">First Responder</span><span class="sc-tag">Running</span><span class="sc-tag">Travel</span></div></div>
-      </div>
-    </div>
-  </section>
-  <section class="features">
-    <div class="section-label">How We Match</div>
-    <div class="section-title">4 Dimensions of Compatibility</div>
-    <div class="section-sub">Every match is scored across four critical dimensions so you find a co-owner who fits your life — not just your budget.</div>
-    <div class="features-grid">
-      <div class="feat-card"><div class="feat-icon" style="background:#EBF5FF;">📍</div><h3>Location + Budget</h3><p>Match by county, city, and home price range. We align your buying power with real CA market values.</p></div>
-      <div class="feat-card"><div class="feat-icon" style="background:#EDFAE3;">💼</div><h3>Career + Income</h3><p>Compatible income levels and profession categories — first responders find first responders, nurses find healthcare colleagues.</p></div>
-      <div class="feat-card"><div class="feat-icon" style="background:#FFF8E7;">🎯</div><h3>Lifestyle + Hobbies</h3><p>Choose from 25+ interest categories. We match your energy to compatible co-owners who share your lifestyle.</p></div>
-      <div class="feat-card"><div class="feat-icon" style="background:#F3EFFF;">🕐</div><h3>Schedule + Commute</h3><p>Day shift? Night shift? Remote? We align work schedules so co-owners coexist peacefully in the same home.</p></div>
-    </div>
-  </section>
-  <section class="how">
-    <div class="section-label">The Process</div>
-    <div class="section-title">From Profile to Pre-Approval in Minutes</div>
-    <div class="steps-row">
-      <div class="step-item"><div class="step-num">1</div><h4>Create Profile</h4><p>Name, profession, income, lifestyle</p></div>
-      <div class="step-item"><div class="step-num">2</div><h4>Set Preferences</h4><p>Location, home type, ideal co-owner</p></div>
-      <div class="step-item"><div class="step-num">3</div><h4>Get Pre-Approved</h4><p>See your co-buying power instantly</p></div>
-      <div class="step-item"><div class="step-num">4</div><h4>Browse Matches</h4><p>Filter by county, profession, score</p></div>
-      <div class="step-item"><div class="step-num">5</div><h4>Connect &amp; Close</h4><p>Meet your match, get funded at $0 down</p></div>
-    </div>
-  </section>
-  <section class="cta-band">
-    <h2>Ready to Stop Renting?</h2>
-    <p>Join California professionals building equity through smart co-ownership.</p>
-    <button class="btn btn-primary" onclick="openAuth('register')" style="font-size:16px;padding:15px 36px;">Start My Free Profile →</button>
-  </section>
-  <footer>
-    <div style="color:white;font-size:18px;font-weight:800;margin-bottom:8px;">Nexus Match · Citizens Financial</div>
-    <strong>Citizens Financial Group, Inc.</strong> · NMLS #2503947<br>
-    Licensed Mortgage Broker · Equal Housing Lender 🏠<br>
-    Nexus Match is a co-owner compatibility platform. Match scores are estimates. Pre-approval figures are preliminary and subject to full underwriting.<br>
-    This is not a commitment to lend. Subject to creditworthiness, income verification, and property eligibility.<br><br>
-    <strong>Contact:</strong> Gregory Ritchie · <a href="mailto:gritchie@citizensfinancial.co" style="color:rgba(255,255,255,.6);">gritchie@citizensfinancial.co</a>
-  </footer>
-</div>
-
-<!-- AUTH MODAL -->
-<div id="auth-modal" class="modal-overlay hidden" onclick="closeAuthOnBg(event)">
-  <div class="modal-box">
-    <div class="modal-head"><h2 id="auth-title">Create Your Profile</h2><p id="auth-sub">Join Nexus Match — it's free</p></div>
-    <div class="modal-tabs">
-      <div class="mtab" id="tab-register" onclick="switchTab('register')">Register</div>
-      <div class="mtab active" id="tab-login" onclick="switchTab('login')">Log In</div>
-    </div>
-    <div class="modal-body">
-      <div id="auth-err" class="modal-err hidden"></div>
-      <div id="auth-info" class="modal-info hidden"></div>
-      <div id="form-register" class="hidden">
-        <div class="fg-row">
-          <div class="fg"><label>FIRST NAME</label><input id="r-first" type="text" placeholder="First name"></div>
-          <div class="fg"><label>LAST NAME</label><input id="r-last" type="text" placeholder="Last name"></div>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-logo">
+            <span>Nexus</span><span>Match</span>
         </div>
-        <div class="fg"><label>EMAIL ADDRESS</label><input id="r-email" type="email" placeholder="your@email.com"></div>
-        <div class="fg"><label>PASSWORD (min 6 characters)</label><input id="r-pass" type="password" placeholder="Create a password"></div>
-        <button class="btn btn-primary btn-block" onclick="doRegister()">Create Account &amp; Start Profile →</button>
-        <p style="text-align:center;font-size:12px;color:var(--mid);margin-top:12px;">By registering you agree to our Terms of Service and Privacy Policy.</p>
-      </div>
-      <div id="form-login">
-        <div class="fg"><label>EMAIL ADDRESS</label><input id="l-email" type="email" placeholder="your@email.com"></div>
-        <div class="fg"><label>PASSWORD</label><input id="l-pass" type="password" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()"></div>
-        <button class="btn btn-navy btn-block" onclick="doLogin()">Log In to Nexus Match</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ONBOARDING -->
-<div id="view-onboarding" class="hidden">
-  <div class="ob-wrap">
-    <div class="ob-prog-labels"><span id="ob-phase-text">Phase 1 of 4</span><strong id="ob-step-text">Step 1 of 10</strong></div>
-    <div class="ob-prog-bar"><div class="ob-prog-fill" id="ob-fill" style="width:10%"></div></div>
-    <div id="ob-step-container"></div>
-  </div>
-</div>
-
-<!-- PRE-APPROVAL -->
-<div id="view-preapproval" class="hidden">
-  <div class="pa-wrap">
-    <div class="pa-hero">
-      <div class="pa-badge">✅ PRE-QUALIFICATION COMPLETE</div>
-      <h2 id="pa-greeting">Congratulations!</h2>
-      <p>Based on your profile, here is your estimated co-buying power:</p>
-      <div class="pa-amount" id="pa-amount">$0</div>
-      <div class="pa-amount-label">Combined Co-Buying Power (with one matched co-owner)</div>
-    </div>
-    <div class="pa-grid">
-      <div class="pa-card"><div class="pa-card-label">Your Solo Buying Power</div><div class="pa-card-val" id="pa-solo">$0</div><div class="pa-card-sub">Individual pre-qual estimate</div></div>
-      <div class="pa-card highlight"><div class="pa-card-label">Co-Buying Power</div><div class="pa-card-val" id="pa-co">$0</div><div class="pa-card-sub">With one co-owner (DTI-based)</div></div>
-      <div class="pa-card"><div class="pa-card-label">Est. Monthly Payment (each)</div><div class="pa-card-val" id="pa-monthly">$0</div><div class="pa-card-sub">At target co-buy price</div></div>
-      <div class="pa-card"><div class="pa-card-label">Savings vs. Renting</div><div class="pa-card-val" id="pa-savings" style="color:var(--green);">$0/mo</div><div class="pa-card-sub">vs. avg rent in your county</div></div>
-    </div>
-    <div class="pa-profile-card">
-      <h3>📋 Your Co-Owner Profile</h3>
-      <div class="attrs-grid" id="pa-attrs"></div>
-      <div class="hobbies-row" id="pa-hobbies"></div>
-    </div>
-    <div class="pa-cta-row">
-      <button class="btn btn-primary" onclick="goToMatches()" style="font-size:16px;padding:14px 36px;">Browse My Matches →</button>
-      <button class="btn btn-outline" onclick="showAppView('my-profile')">View Full Profile</button>
-    </div>
-  </div>
-</div>
-
-<!-- APP SHELL -->
-<div id="view-app" class="hidden">
-  <div class="app-subnav">
-    <div class="asnav-link active" id="asnav-matches" onclick="showAppView('matches')">🔍 My Matches</div>
-    <div class="asnav-link" id="asnav-profile" onclick="showAppView('my-profile')">👤 My Profile</div>
-  </div>
-  <div id="app-matches" class="matches-wrap">
-    <div class="matches-top">
-      <div><h2>Your Matches <span id="match-count-badge" style="background:var(--green);color:white;font-size:13px;padding:3px 10px;border-radius:12px;margin-left:8px;font-weight:700;"></span></h2><p id="match-sub-text">Loading your matches…</p></div>
-      <button class="btn btn-outline btn-sm" onclick="showAppView('my-profile')">Edit My Profile</button>
-    </div>
-    <div class="filter-section">
-      <div class="filter-section-title">Filter By County</div>
-      <div class="filter-chips" id="county-filters"></div>
-      <div class="filter-section-title" style="margin-top:14px;">Filter By Profession</div>
-      <div class="filter-chips" id="prof-filters"></div>
-    </div>
-    <div class="matches-grid" id="matches-grid"><div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--mid);">Loading matches from Supabase…</div></div>
-  </div>
-  <div id="app-profile-detail" class="hidden"><div class="pd-wrap"><div class="back-row" onclick="showAppView('matches')">← Back to Matches</div><div id="pd-content"></div></div></div>
-  <div id="app-my-profile" class="hidden"><div class="my-profile-wrap"><div class="matches-top"><div><h2>My Profile</h2><p>Your co-owner profile visible to matched members</p></div></div><div id="my-profile-content"></div></div></div>
-</div>
-
-<!-- CONNECT MODAL -->
-<div id="connect-modal" class="modal-overlay hidden" onclick="closeConnectOnBg(event)">
-  <div class="modal-box connect-modal-box">
-    <div class="modal-head" id="connect-head"><h2>Send Connection Request</h2><p>Introduce yourself to your match</p></div>
-    <div class="connect-modal-body" id="connect-body"></div>
-  </div>
-</div>
-
-<!-- SPINNER -->
-<div id="spinner" class="spinner-overlay hidden"><div class="spinner"></div><div class="spinner-label" id="spinner-label">Loading…</div></div>
-
-<!-- TOAST -->
-<div id="toast"></div>
-
-<script>
-// ─────────────────────────────────────────────
-//  SUPABASE INIT
-// ─────────────────────────────────────────────
-const SUPABASE_URL = 'https://tiwsuwbalvnrqsmudjfy.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpd3N1d2JhbHZucnFzbXVkamZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MTExOTcsImV4cCI6MjA4NzE4NzE5N30.SKRaCBsG-ynDkPhZlOphPUj9SqKg-NGCdfcypAIwhk4';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-
-const AVG_RENT = {'Los Angeles':2400,'Orange':2500,'San Diego':2800,'Sacramento':1650,'Contra Costa':1900,'Alameda':2200,'Santa Clara':2600,'Solano':1850};
-const CARD_COLORS = ['#1B3A6B','#1D6FA4','#5AB034','#0d4a8a','#2d5a9e','#1a6640','#1B3A6B','#0d4a8a'];
-
-// ─────────────────────────────────────────────
-//  STATE
-// ─────────────────────────────────────────────
-const S = {
-  user: null,           // supabase auth user
-  profile: null,        // nexus_profiles row for current user
-  allProfiles: [],      // all active profiles from DB
-  connections: new Set(), // recipient IDs already requested
-  countyFilter: 'All',
-  profFilter: 'All',
-};
-
-// ─────────────────────────────────────────────
-//  INIT — check session on load
-// ─────────────────────────────────────────────
-(async function init(){
-  showSpinner('Initializing…');
-  const { data: { session } } = await sb.auth.getSession();
-  if(session?.user){
-    S.user = session.user;
-    await loadUserProfile();
-    updateNavUser();
-    if(S.profile?.profile_complete){
-      await loadAllProfiles();
-      renderPreApproval();
-      showView('preapproval');
-    } else {
-      startOnboarding();
-    }
-  } else {
-    showView('landing');
-  }
-  hideSpinner();
-
-  // Listen for auth state changes
-  sb.auth.onAuthStateChange(async (event, session) => {
-    if(event === 'SIGNED_IN' && session?.user){
-      S.user = session.user;
-    } else if(event === 'SIGNED_OUT'){
-      S.user = null; S.profile = null;
-    }
-  });
-})();
-
-async function loadUserProfile(){
-  if(!S.user) return;
-  const { data } = await sb.from('nexus_profiles').select('*').eq('user_id', S.user.id).maybeSingle();
-  S.profile = data;
-}
-
-async function loadAllProfiles(){
-  const { data, error } = await sb.from('nexus_profiles').select('*').eq('is_active', true);
-  if(!error && data) S.allProfiles = data;
-}
-
-async function loadConnections(){
-  if(!S.profile) return;
-  const { data } = await sb.from('nexus_connections').select('recipient_id').eq('requester_id', S.profile.id);
-  if(data) data.forEach(r => S.connections.add(r.recipient_id));
-}
-
-// ─────────────────────────────────────────────
-//  VIEW MANAGEMENT
-// ─────────────────────────────────────────────
-function showView(v){
-  ['landing','onboarding','preapproval','app'].forEach(id => {
-    document.getElementById('view-'+id).classList.toggle('hidden', id !== v);
-  });
-  window.scrollTo(0,0);
-}
-
-function showAppView(v){
-  showView('app');
-  ['matches','profile-detail','my-profile'].forEach(id => {
-    document.getElementById('app-'+id).classList.toggle('hidden', id !== v);
-  });
-  document.getElementById('asnav-matches').classList.toggle('active', v==='matches');
-  document.getElementById('asnav-profile').classList.toggle('active', v==='my-profile');
-  if(v==='my-profile') renderMyProfile();
-  window.scrollTo(0,0);
-}
-
-async function goToMatches(){
-  showSpinner('Finding your matches…');
-  await loadAllProfiles();
-  await loadConnections();
-  renderMatches();
-  showAppView('matches');
-  hideSpinner();
-}
-
-// ─────────────────────────────────────────────
-//  AUTH
-// ─────────────────────────────────────────────
-function openAuth(tab){
-  document.getElementById('auth-modal').classList.remove('hidden');
-  switchTab(tab);
-  clearAuthMessages();
-}
-function closeAuth(){ document.getElementById('auth-modal').classList.add('hidden'); }
-function closeAuthOnBg(e){ if(e.target.id==='auth-modal') closeAuth(); }
-
-function switchTab(tab){
-  document.getElementById('tab-register').classList.toggle('active', tab==='register');
-  document.getElementById('tab-login').classList.toggle('active', tab==='login');
-  document.getElementById('form-register').classList.toggle('hidden', tab!=='register');
-  document.getElementById('form-login').classList.toggle('hidden', tab!=='login');
-  document.getElementById('auth-title').textContent = tab==='register' ? 'Create Your Profile' : 'Welcome Back';
-  document.getElementById('auth-sub').textContent = tab==='register' ? 'Join Nexus Match — it\'s free' : 'Log in to your Nexus Match account';
-  clearAuthMessages();
-}
-
-function clearAuthMessages(){
-  document.getElementById('auth-err').classList.add('hidden');
-  document.getElementById('auth-info').classList.add('hidden');
-}
-function showAuthErr(msg){ const e=document.getElementById('auth-err'); e.textContent=msg; e.classList.remove('hidden'); }
-function showAuthInfo(msg){ const e=document.getElementById('auth-info'); e.textContent=msg; e.classList.remove('hidden'); }
-
-async function doRegister(){
-  const first = document.getElementById('r-first').value.trim();
-  const last  = document.getElementById('r-last').value.trim();
-  const email = document.getElementById('r-email').value.trim();
-  const pass  = document.getElementById('r-pass').value;
-  if(!first||!last){ showAuthErr('Please enter your first and last name.'); return; }
-  if(!email||!email.includes('@')){ showAuthErr('Please enter a valid email address.'); return; }
-  if(!pass||pass.length<6){ showAuthErr('Password must be at least 6 characters.'); return; }
-
-  showSpinner('Creating your account…');
-  const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data: { first_name: first, last_name: last } } });
-  hideSpinner();
-
-  if(error){ showAuthErr(error.message); return; }
-  S.user = data.user;
-  // Store name in OB_DATA for onboarding prefill
-  OB_DATA.firstName = first; OB_DATA.lastName = last;
-  closeAuth();
-  updateNavUser();
-  startOnboarding();
-}
-
-async function doLogin(){
-  const email = document.getElementById('l-email').value.trim();
-  const pass  = document.getElementById('l-pass').value;
-  if(!email||!pass){ showAuthErr('Please enter your email and password.'); return; }
-
-  showSpinner('Signing you in…');
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-  hideSpinner();
-
-  if(error){ showAuthErr(error.message); return; }
-  S.user = data.user;
-  await loadUserProfile();
-  closeAuth();
-  updateNavUser();
-
-  if(S.profile?.profile_complete){
-    await loadAllProfiles();
-    await loadConnections();
-    renderPreApproval();
-    showView('preapproval');
-  } else {
-    startOnboarding();
-  }
-}
-
-async function logout(){
-  showSpinner('Signing out…');
-  await sb.auth.signOut();
-  S.user = null; S.profile = null; S.connections.clear(); S.allProfiles = [];
-  updateNavUser();
-  showView('landing');
-  hideSpinner();
-  toast('Signed out successfully.');
-}
-
-function updateNavUser(){
-  const in_ = !!S.user;
-  document.getElementById('nav-guest').classList.toggle('hidden', in_);
-  document.getElementById('nav-user-area').classList.toggle('hidden', !in_);
-  if(in_){
-    const first = S.profile?.first_name || S.user?.user_metadata?.first_name || S.user?.email?.split('@')[0] || 'User';
-    const last  = S.profile?.last_name  || S.user?.user_metadata?.last_name  || '';
-    const initials = (first[0]+(last[0]||'')).toUpperCase();
-    document.getElementById('nav-avatar').textContent = initials;
-    document.getElementById('nav-name').textContent   = first;
-  }
-}
-
-// ─────────────────────────────────────────────
-//  ONBOARDING
-// ─────────────────────────────────────────────
-let OB_STEP = 0;
-const OB_DATA = {};
-const PROFESSIONS = [
-  'Firefighter','Police Officer','EMT / Paramedic','Sheriff\'s Deputy','Corrections Officer',
-  'Registered Nurse','Doctor / Physician','Physical Therapist','Pharmacist','Medical Assistant',
-  'Teacher (K-12)','Professor','School Counselor',
-  'Software Engineer','Data Analyst','IT Specialist','UX Designer',
-  'Social Worker','City / County Employee','Military Veteran',
-  'Electrician','Plumber','HVAC Tech','Construction Manager',
-  'Financial Analyst','Accountant','Mortgage Banker'
-];
-const PROF_CAT_MAP = {
-  'Firefighter':'First Responder','Police Officer':'First Responder','EMT / Paramedic':'First Responder',
-  'Sheriff\'s Deputy':'First Responder','Corrections Officer':'First Responder',
-  'Registered Nurse':'Healthcare','Doctor / Physician':'Healthcare','Physical Therapist':'Healthcare',
-  'Pharmacist':'Healthcare','Medical Assistant':'Healthcare',
-  'Teacher (K-12)':'Education','Professor':'Education','School Counselor':'Education',
-  'Software Engineer':'Tech','Data Analyst':'Tech','IT Specialist':'Tech','UX Designer':'Tech',
-  'Social Worker':'Government','City / County Employee':'Government','Military Veteran':'Government',
-  'Electrician':'Trades','Plumber':'Trades','HVAC Tech':'Trades','Construction Manager':'Trades',
-  'Financial Analyst':'Finance','Accountant':'Finance','Mortgage Banker':'Finance'
-};
-const COUNTIES = [
-  {name:'Los Angeles', cities:'LA, Long Beach, Torrance, Compton'},
-  {name:'Orange',      cities:'Anaheim, Irvine, Santa Ana, Huntington Beach'},
-  {name:'San Diego',   cities:'San Diego, Chula Vista, El Cajon'},
-  {name:'Sacramento',  cities:'Sacramento, Elk Grove, Roseville'},
-  {name:'Contra Costa',cities:'Concord, Walnut Creek, Richmond'},
-  {name:'Alameda',     cities:'Oakland, Fremont, Hayward'},
-  {name:'Santa Clara', cities:'San Jose, Sunnyvale, Santa Clara'},
-  {name:'Solano',      cities:'Fairfield, Vallejo, Vacaville'},
-];
-const HOBBIES_LIST = ['Gym / Fitness','Hiking','Cooking','Reading','Gaming','Music','Photography','Travel','Yoga','Gardening','Cycling','Swimming','Sports','Volunteering','Art / Drawing','Dancing','Meditation','Wine Tasting','Rock Climbing','Camping','Surfing','Running','Podcasts / Audio','DIY / Home Projects','Pets / Animals'];
-const OB_STEPS = [
-  {phase:'Phase 1 of 4 — About You',         title:'What\'s your name?',              sub:'This is how you\'ll appear to potential co-owners.',render:renderStep_Name},
-  {phase:'Phase 1 of 4 — About You',         title:'What do you do for work?',         sub:'Profession helps us find compatible co-owners.',    render:renderStep_Profession},
-  {phase:'Phase 1 of 4 — About You',         title:'What is your annual income?',      sub:'Used for co-buying power. Never shown to matches.',  render:renderStep_Income},
-  {phase:'Phase 2 of 4 — Location & Budget', title:'Where do you want to live?',       sub:'Select the California county you\'re targeting.',    render:renderStep_County},
-  {phase:'Phase 2 of 4 — Location & Budget', title:'What is your home buying budget?', sub:'Maximum total home price (you cover 50%).',         render:renderStep_Budget},
-  {phase:'Phase 3 of 4 — Home Goals',        title:'What type of home?',               sub:'We\'ll match co-owners with compatible preferences.',render:renderStep_PropType},
-  {phase:'Phase 3 of 4 — Home Goals',        title:'How many bedrooms?',               sub:'Each co-owner typically gets their own bedroom.',    render:renderStep_Beds},
-  {phase:'Phase 4 of 4 — Lifestyle',         title:'Select your hobbies & interests',  sub:'Choose up to 8. Used to find lifestyle-compatible matches.',render:renderStep_Hobbies},
-  {phase:'Phase 4 of 4 — Lifestyle',         title:'What is your work schedule?',      sub:'Matching schedules = more harmonious shared living.',render:renderStep_Schedule},
-  {phase:'Phase 4 of 4 — Lifestyle',         title:'What kind of co-owner?',           sub:'Final step! Tell us your co-owner preference.',     render:renderStep_CoOwner},
-];
-
-function startOnboarding(){
-  OB_STEP = 0;
-  // Pre-fill from auth metadata
-  if(S.user){
-    OB_DATA.firstName = OB_DATA.firstName || S.user.user_metadata?.first_name || '';
-    OB_DATA.lastName  = OB_DATA.lastName  || S.user.user_metadata?.last_name  || '';
-  }
-  renderObStep();
-  showView('onboarding');
-}
-
-function renderObStep(){
-  const step = OB_STEPS[OB_STEP];
-  const pct  = Math.round(((OB_STEP+1)/OB_STEPS.length)*100);
-  document.getElementById('ob-phase-text').textContent = step.phase;
-  document.getElementById('ob-step-text').textContent  = `Step ${OB_STEP+1} of ${OB_STEPS.length}`;
-  document.getElementById('ob-fill').style.width = pct+'%';
-  const wrap = document.getElementById('ob-step-container');
-  wrap.innerHTML = '';
-  const card = document.createElement('div');
-  card.className = 'ob-card';
-  card.innerHTML = `<h2>${step.title}</h2><div class="ob-sub">${step.sub}</div><div id="ob-content"></div><div class="ob-nav" id="ob-nav"></div>`;
-  wrap.appendChild(card);
-  step.render();
-  // Nav buttons
-  const nav = document.getElementById('ob-nav');
-  if(OB_STEP > 0){ const b=document.createElement('span'); b.className='ob-nav-back'; b.textContent='← Back'; b.onclick=()=>{OB_STEP--;renderObStep();}; nav.appendChild(b); }
-  const btn = document.createElement('button');
-  btn.className = 'btn btn-primary';
-  btn.textContent = OB_STEP===OB_STEPS.length-1 ? 'Complete Profile →' : 'Continue →';
-  btn.onclick = () => advanceOb(OB_STEP===OB_STEPS.length-1);
-  nav.appendChild(btn);
-}
-
-function advanceOb(isLast){
-  if(!validateOb()) return;
-  if(isLast){ saveProfile(); } else { OB_STEP++; renderObStep(); }
-}
-
-function validateOb(){
-  const checks = [
-    ()=>!OB_DATA.firstName||!OB_DATA.lastName ? 'Please enter your name.' : null,
-    ()=>!OB_DATA.profession ? 'Please select a profession.' : null,
-    ()=>!OB_DATA.income ? 'Please set your income.' : null,
-    ()=>!OB_DATA.county ? 'Please select a county.' : null,
-    ()=>!OB_DATA.budget ? 'Please set a budget.' : null,
-    ()=>!OB_DATA.propType ? 'Please select a property type.' : null,
-    ()=>!OB_DATA.beds ? 'Please select number of bedrooms.' : null,
-    ()=>!OB_DATA.hobbies||OB_DATA.hobbies.length<2 ? 'Please select at least 2 hobbies.' : null,
-    ()=>!OB_DATA.schedule ? 'Please select your schedule.' : null,
-    ()=>!OB_DATA.coOwnerPref ? 'Please select a preference.' : null,
-  ];
-  const msg = checks[OB_STEP]();
-  if(msg){ toast(msg,'warn'); return false; }
-  return true;
-}
-
-async function saveProfile(){
-  showSpinner('Saving your profile…');
-  const row = {
-    user_id:       S.user?.id || null,
-    first_name:    OB_DATA.firstName,
-    last_name:     OB_DATA.lastName,
-    email:         S.user?.email || null,
-    age:           OB_DATA.age || null,
-    gender:        OB_DATA.gender || null,
-    profession:    OB_DATA.profession,
-    prof_category: PROF_CAT_MAP[OB_DATA.profession] || 'Professional',
-    employer:      OB_DATA.employer || null,
-    income:        OB_DATA.income,
-    county:        OB_DATA.county,
-    city:          OB_DATA.city || null,
-    budget:        OB_DATA.budget,
-    prop_type:     OB_DATA.propType,
-    beds:          OB_DATA.beds,
-    hobbies:       OB_DATA.hobbies || [],
-    schedule:      OB_DATA.schedule,
-    commute_max:   OB_DATA.commute || 25,
-    co_owner_pref: OB_DATA.coOwnerPref,
-    is_active:     true,
-    profile_complete: true,
-  };
-
-  let result;
-  if(S.profile?.id){
-    result = await sb.from('nexus_profiles').update(row).eq('id', S.profile.id).select().single();
-  } else {
-    result = await sb.from('nexus_profiles').insert(row).select().single();
-  }
-  hideSpinner();
-
-  if(result.error){ toast('Error saving profile: '+result.error.message,'error'); return; }
-  S.profile = result.data;
-  updateNavUser();
-  await loadAllProfiles();
-  renderPreApproval();
-  showView('preapproval');
-  toast('Profile saved! Finding your matches…','success');
-}
-
-// Step renderers
-function renderStep_Name(){
-  const c = document.getElementById('ob-content');
-  c.innerHTML = `<div class="fg-row">
-    <div class="fg"><label>FIRST NAME</label><input id="ob-first" type="text" placeholder="First name" value="${OB_DATA.firstName||''}"></div>
-    <div class="fg"><label>LAST NAME</label><input id="ob-last" type="text" placeholder="Last name" value="${OB_DATA.lastName||''}"></div>
-  </div>
-  <div class="fg-row">
-    <div class="fg"><label>AGE</label><input id="ob-age" type="number" placeholder="Age" min="18" max="70" value="${OB_DATA.age||''}"></div>
-    <div class="fg"><label>GENDER (optional)</label><select id="ob-gender">
-      <option value="">Prefer not to say</option>
-      <option value="M" ${OB_DATA.gender==='M'?'selected':''}>Male</option>
-      <option value="F" ${OB_DATA.gender==='F'?'selected':''}>Female</option>
-      <option value="NB" ${OB_DATA.gender==='NB'?'selected':''}>Non-binary</option>
-    </select></div>
-  </div>`;
-  document.getElementById('ob-first').oninput = e=>{ OB_DATA.firstName=e.target.value.trim(); };
-  document.getElementById('ob-last').oninput  = e=>{ OB_DATA.lastName=e.target.value.trim(); };
-  document.getElementById('ob-age').oninput   = e=>{ OB_DATA.age=parseInt(e.target.value)||null; };
-  document.getElementById('ob-gender').onchange = e=>{ OB_DATA.gender=e.target.value; };
-}
-
-function renderStep_Profession(){
-  const c = document.getElementById('ob-content');
-  c.innerHTML = `<div class="fg"><label>PROFESSION</label>
-    <select id="ob-prof"><option value="">Select your profession…</option>
-    ${PROFESSIONS.map(p=>`<option value="${p}" ${OB_DATA.profession===p?'selected':''}>${p}</option>`).join('')}
-    </select></div>
-  <div class="fg"><label>EMPLOYER / AGENCY (optional)</label><input id="ob-employer" type="text" placeholder="e.g., Kaiser Permanente, LAPD, LAUSD…" value="${OB_DATA.employer||''}"></div>`;
-  document.getElementById('ob-prof').onchange = e=>{ OB_DATA.profession=e.target.value; };
-  document.getElementById('ob-employer').oninput = e=>{ OB_DATA.employer=e.target.value; };
-}
-
-function renderStep_Income(){
-  const val = OB_DATA.income || 80000;
-  const c = document.getElementById('ob-content');
-  c.innerHTML = `<div class="range-display" id="inc-disp">$${val.toLocaleString()} <sub>/year</sub></div>
-    <input type="range" id="inc-range" min="30000" max="250000" step="2000" value="${val}" style="--pct:${pct(val,30000,250000)}">
-    <div class="range-labels"><span>$30K</span><span>$250K+</span></div>
-    <p style="font-size:12px;color:var(--mid);margin-top:16px;line-height:1.6;">🔒 Income is private — only used for co-buying power calculations. Never shown to matches.</p>`;
-  OB_DATA.income = val;
-  document.getElementById('inc-range').oninput = function(){
-    OB_DATA.income = parseInt(this.value);
-    document.getElementById('inc-disp').innerHTML = '$'+OB_DATA.income.toLocaleString()+' <sub>/year</sub>';
-    this.style.setProperty('--pct', pct(OB_DATA.income,30000,250000));
-  };
-}
-
-function renderStep_County(){
-  const c = document.getElementById('ob-content');
-  c.innerHTML = `<div class="county-grid">${COUNTIES.map(co=>`
-    <div class="county-opt${OB_DATA.county===co.name?' sel':''}" onclick="selCounty('${co.name}',this)">
-      <strong>${co.name}</strong><span>${co.cities}</span>
-    </div>`).join('')}</div>
-  <div class="fg" style="margin-top:16px;"><label>PREFERRED CITY (optional)</label>
-  <input id="ob-city" type="text" placeholder="e.g., Long Beach, Elk Grove…" value="${OB_DATA.city||''}"></div>`;
-  document.getElementById('ob-city').oninput = e=>{ OB_DATA.city=e.target.value.trim(); };
-}
-function selCounty(name,el){
-  OB_DATA.county = name;
-  document.querySelectorAll('.county-opt').forEach(e=>e.classList.remove('sel'));
-  el.classList.add('sel');
-}
-
-function renderStep_Budget(){
-  const val = OB_DATA.budget || 600000;
-  const c = document.getElementById('ob-content');
-  c.innerHTML = `<div style="font-size:13px;color:var(--mid);margin-bottom:8px;">Maximum total home price — you and your co-owner each cover 50%</div>
-    <div class="range-display" id="bud-disp">$${(val/1000).toFixed(0)}K</div>
-    <input type="range" id="bud-range" min="200000" max="1500000" step="10000" value="${val}" style="--pct:${pct(val,200000,1500000)}">
-    <div class="range-labels"><span>$200K</span><span>$1.5M</span></div>
-    <div id="bud-note" style="background:var(--light);border-radius:10px;padding:14px;margin-top:16px;font-size:13px;line-height:1.6;"></div>`;
-  OB_DATA.budget = val; updateBudNote(val);
-  document.getElementById('bud-range').oninput = function(){
-    OB_DATA.budget = parseInt(this.value);
-    document.getElementById('bud-disp').textContent = '$'+(OB_DATA.budget/1000).toFixed(0)+'K';
-    this.style.setProperty('--pct', pct(OB_DATA.budget,200000,1500000));
-    updateBudNote(OB_DATA.budget);
-  };
-}
-function updateBudNote(v){ const m=Math.round(v*0.0055/2); const n=document.getElementById('bud-note'); if(n) n.innerHTML=`<strong>Your estimated monthly payment:</strong> ~$${m.toLocaleString()}/mo<br><span style="color:var(--mid);">6.5% rate · 30-yr fixed · 50/50 split</span>`; }
-
-function renderStep_PropType(){
-  const types = ['Single Family','Townhome','Condo','Duplex','Multi-Unit'];
-  document.getElementById('ob-content').innerHTML = `<div class="pref-row">${types.map(t=>`<div class="pref-btn${OB_DATA.propType===t?' sel':''}" onclick="selPref('propType','${t}',this)">${t}</div>`).join('')}</div>`;
-}
-
-function renderStep_Beds(){
-  document.getElementById('ob-content').innerHTML = `<div class="pref-row">${[2,3,4,5].map(n=>`<div class="pref-btn${OB_DATA.beds===n?' sel':''}" onclick="selPref('beds',${n},this)">${n} Bedrooms</div>`).join('')}</div>
-    <p style="font-size:13px;color:var(--mid);margin-top:16px;line-height:1.55;">💡 We recommend at least 3 bedrooms for co-ownership — one private room each plus a shared living space.</p>`;
-}
-
-function renderStep_Hobbies(){
-  OB_DATA.hobbies = OB_DATA.hobbies || [];
-  document.getElementById('ob-content').innerHTML = `<div style="font-size:13px;color:var(--mid);margin-bottom:12px;">Select 2–8 hobbies:</div>
-    <div class="hobby-grid">${HOBBIES_LIST.map(h=>`<div class="hchip${OB_DATA.hobbies.includes(h)?' sel':''}" onclick="toggleHobby('${h}',this)">${h}</div>`).join('')}</div>`;
-}
-function toggleHobby(h,el){
-  if(OB_DATA.hobbies.includes(h)){ OB_DATA.hobbies=OB_DATA.hobbies.filter(x=>x!==h); el.classList.remove('sel'); }
-  else if(OB_DATA.hobbies.length<8){ OB_DATA.hobbies.push(h); el.classList.add('sel'); }
-  else toast('Maximum 8 hobbies selected.','warn');
-}
-
-function renderStep_Schedule(){
-  const schedules = ['Day Shift','Night Shift','Shift Work (24/48 or similar)','Remote / Fully Flexible','Hybrid','Evenings & Weekends','Rotating Schedule'];
-  document.getElementById('ob-content').innerHTML = `<div class="pref-row" style="flex-direction:column;align-items:flex-start;">${schedules.map(s=>`<div class="pref-btn${OB_DATA.schedule===s?' sel':''}" style="width:100%;text-align:left;" onclick="selPref('schedule','${s}',this)">${s}</div>`).join('')}</div>`;
-}
-
-function renderStep_CoOwner(){
-  document.getElementById('ob-content').innerHTML = `<div class="fg"><label>PREFERRED CO-OWNER PROFESSION</label>
-    <select id="ob-copref">
-      <option value="Open" ${OB_DATA.coOwnerPref==='Open'?'selected':''}>Open to any profession</option>
-      <option value="Same Profession" ${OB_DATA.coOwnerPref==='Same Profession'?'selected':''}>Same profession as me</option>
-      <option value="First Responder" ${OB_DATA.coOwnerPref==='First Responder'?'selected':''}>First Responder (Police, Fire, EMT)</option>
-      <option value="Healthcare" ${OB_DATA.coOwnerPref==='Healthcare'?'selected':''}>Healthcare Professional</option>
-      <option value="Education" ${OB_DATA.coOwnerPref==='Education'?'selected':''}>Education / Teacher</option>
-      <option value="Tech" ${OB_DATA.coOwnerPref==='Tech'?'selected':''}>Tech Professional</option>
-      <option value="Government" ${OB_DATA.coOwnerPref==='Government'?'selected':''}>Government / Public Service</option>
-      <option value="Trades" ${OB_DATA.coOwnerPref==='Trades'?'selected':''}>Trades Professional</option>
-    </select></div>
-  <div class="fg"><label>MAX COMMUTE TOLERANCE</label>
-    <select id="ob-commute">${[10,15,20,25,30,40,60].map(v=>`<option value="${v}" ${OB_DATA.commute===v?'selected':''}>${v} minutes</option>`).join('')}</select></div>
-  <p style="font-size:13px;color:var(--mid);line-height:1.6;margin-top:8px;">🏆 Almost done! Click <strong>Complete Profile</strong> to see your co-buying power and browse real matches.</p>`;
-  document.getElementById('ob-copref').onchange = e=>{ OB_DATA.coOwnerPref=e.target.value; };
-  document.getElementById('ob-commute').onchange = e=>{ OB_DATA.commute=parseInt(e.target.value); };
-  OB_DATA.coOwnerPref = OB_DATA.coOwnerPref || 'Open';
-  OB_DATA.commute     = OB_DATA.commute || 25;
-}
-
-function selPref(key,val,el){ OB_DATA[key]=val; el.closest('.pref-row').querySelectorAll('.pref-btn').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
-function pct(v,min,max){ return ((v-min)/(max-min)*100).toFixed(1)+'%'; }
-
-// ─────────────────────────────────────────────
-//  PRE-APPROVAL
-// ─────────────────────────────────────────────
-function renderPreApproval(){
-  const p = S.profile;
-  if(!p) return;
-  const income   = p.income;
-  const soloBuy  = Math.round(income * 3.8);
-  const coBuy    = Math.round(income * 2 * 3.5);
-  const target   = Math.min(coBuy, p.budget || coBuy);
-  const monthly  = Math.round(target * 0.0055 / 2);
-  const rent     = AVG_RENT[p.county] || 2000;
-  const savings  = Math.max(0, rent - monthly);
-
-  document.getElementById('pa-greeting').textContent = `Congratulations, ${p.first_name}!`;
-  document.getElementById('pa-amount').textContent   = '$'+coBuy.toLocaleString();
-  document.getElementById('pa-solo').textContent     = '$'+soloBuy.toLocaleString();
-  document.getElementById('pa-co').textContent       = '$'+coBuy.toLocaleString();
-  document.getElementById('pa-monthly').textContent  = '$'+monthly.toLocaleString()+'/mo';
-  document.getElementById('pa-savings').textContent  = savings>0 ? '+$'+savings.toLocaleString()+'/mo' : '~Break Even';
-
-  const attrs = [
-    {l:'Profession',    v: p.profession},
-    {l:'Employer',      v: p.employer||'—'},
-    {l:'Target County', v: p.county},
-    {l:'Preferred City',v: p.city||'—'},
-    {l:'Property Type', v: p.prop_type},
-    {l:'Bedrooms',      v: p.beds+' BR'},
-    {l:'Work Schedule', v: p.schedule||'—'},
-    {l:'Co-Owner Pref.',v: p.co_owner_pref||'Open'},
-  ];
-  document.getElementById('pa-attrs').innerHTML = attrs.map(a=>`<div class="attr-item"><div class="al">${a.l}</div><div class="av">${a.v}</div></div>`).join('');
-  document.getElementById('pa-hobbies').innerHTML = (p.hobbies||[]).map(h=>`<span class="htag">${h}</span>`).join('');
-}
-
-// ─────────────────────────────────────────────
-//  MATCHING ALGORITHM
-// ─────────────────────────────────────────────
-const ADJACENT = {
-  'Los Angeles':['Orange','San Diego'],'Orange':['Los Angeles','San Diego'],
-  'San Diego':['Orange','Los Angeles'],'Sacramento':['Contra Costa','Solano','Alameda'],
-  'Contra Costa':['Alameda','Solano','Sacramento'],'Alameda':['Contra Costa','Santa Clara','Solano'],
-  'Santa Clara':['Alameda'],'Solano':['Contra Costa','Alameda','Sacramento']
-};
-
-function scoreMatch(p, u){
-  let s = 0;
-  // Location (30)
-  if(p.county === u.county) s += 30;
-  else if((ADJACENT[u.county]||[]).includes(p.county)) s += 14;
-  else s += 2;
-  // Income (20)
-  s += Math.round(Math.min(u.income,p.income)/Math.max(u.income,p.income)*20);
-  // Hobbies (20)
-  const shared = (u.hobbies||[]).filter(h=>(p.hobbies||[]).includes(h)).length;
-  s += Math.min(20, shared*4);
-  // Profession pref (15)
-  const pref = u.co_owner_pref||'Open';
-  if(pref==='Open') s += 10;
-  else if(pref===p.prof_category) s += 15;
-  else if(pref==='Same Profession' && p.prof_category===u.prof_category) s += 15;
-  else s += 3;
-  // Budget (15)
-  s += Math.round(Math.min(u.budget,p.budget)/Math.max(u.budget,p.budget)*15);
-  return Math.min(99, s);
-}
-
-function getDims(p, u){
-  const locS = p.county===u.county ? 98 : (ADJACENT[u.county]||[]).includes(p.county) ? 72 : 35;
-  const incS = Math.round(Math.min(u.income,p.income)/Math.max(u.income,p.income)*100);
-  const shared = (u.hobbies||[]).filter(h=>(p.hobbies||[]).includes(h)).length;
-  const lifS = Math.min(99, 30+shared*12);
-  const schS = p.schedule===u.schedule ? 95 : (p.schedule&&u.schedule&&p.schedule.includes('Day')&&u.schedule.includes('Day'))?80:60;
-  return {loc:locS, inc:incS, lif:lifS, sch:schS};
-}
-
-function incomeLabel(n){
-  if(n<60000)  return '<$60K';
-  if(n<80000)  return '$60–80K';
-  if(n<100000) return '$80–100K';
-  if(n<130000) return '$100–130K';
-  return '$130K+';
-}
-
-// ─────────────────────────────────────────────
-//  MATCHES VIEW
-// ─────────────────────────────────────────────
-function renderMatches(){
-  const u = S.profile;
-  if(!u) return;
-  // Filter out the user's own profile and score the rest
-  const scored = S.allProfiles
-    .filter(p => p.id !== u.id)
-    .map(p => ({...p, score: scoreMatch(p, u), dims: getDims(p, u)}))
-    .sort((a,b) => b.score - a.score);
-
-  document.getElementById('match-count-badge').textContent = scored.length+' matches';
-  document.getElementById('match-sub-text').textContent = `Best matches for ${u.first_name} in ${u.county} and nearby counties`;
-
-  const counties  = ['All', ...new Set(scored.map(p=>p.county))];
-  const profCats  = ['All', ...new Set(scored.map(p=>p.prof_category))];
-  renderFilterChips('county-filters', counties, 'county');
-  renderFilterChips('prof-filters',   profCats,  'prof');
-  renderMatchCards(scored);
-}
-
-function renderFilterChips(id, items, type){
-  document.getElementById(id).innerHTML = items.map(item=>`<div class="fchip${(type==='county'?S.countyFilter:S.profFilter)===item?' active':''}" onclick="setFilter('${type}','${item}')">${item}</div>`).join('');
-}
-
-function setFilter(type, val){
-  if(type==='county') S.countyFilter = val;
-  else S.profFilter = val;
-  renderMatches();
-}
-
-function renderMatchCards(profiles){
-  const g = document.getElementById('matches-grid');
-  const filtered = profiles.filter(p=>{
-    if(S.countyFilter!=='All' && p.county!==S.countyFilter) return false;
-    if(S.profFilter!=='All' && p.prof_category!==S.profFilter) return false;
-    return true;
-  });
-  if(!filtered.length){ g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--mid);">No matches with current filters. Try clearing them.</div>'; return; }
-  const idx = (i)=>CARD_COLORS[i % CARD_COLORS.length];
-  g.innerHTML = filtered.map((p,i)=>{
-    const bg = idx(i);
-    const conn = S.connections.has(p.id);
-    const scoreColor = p.score>=85?'var(--green)':p.score>=70?'var(--gold)':'var(--mid)';
-    return `<div class="pcard" onclick="viewProfile('${p.id}')">
-      <div class="pcard-top" style="background:linear-gradient(135deg,${bg},${bg}cc);">
-        <div class="pcard-avatar">${(p.first_name[0]+(p.last_name||'')[0]||'').toUpperCase()}</div>
-        <div class="pcard-info">
-          <h3>${p.first_name} ${p.last_name}</h3>
-          <div class="pci-sub">${p.profession}</div>
-          <div class="pci-sub">📍 ${p.city||p.county}, ${p.county}</div>
+        <div class="nav-right" id="navRight">
+            <a class="nav-link" onclick="openAuthModal()">Log In</a>
+            <button class="btn-primary" onclick="openAuthModal()">Get Started</button>
         </div>
-        <div class="pcard-score">
-          <div class="pcard-score-num" style="color:${scoreColor};">${p.score}%</div>
-          <div class="pcard-score-label">match</div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>You're Going to Live Under a Roof.<br><span style="color:#5AB034;">Make It Yours.</span></h1>
+            <p style="font-size:1.15rem;max-width:720px;margin:0 auto 1.5rem;line-height:1.75;">Nexus Match is the central connection where individuals and families unite â California's first-of-its-kind co-ownership platform that transforms isolated dreams into a shared reality. We match 2â4 like-minded people to purchase a real home together, split every cost equitably, and build genuine, legally protected equity from day one. Same neighborhood you love. A fraction of what you'd pay alone. A future that belongs to you.</p>
+            <div class="hero-ctas">
+                <button class="btn-primary" onclick="openAuthModal()" style="font-size:1.05rem;padding:1rem 2rem;">Find My Co-Owner â</button>
+                <button class="btn-outline" onclick="openAuthModal()">I Have an Account</button>
+            </div>
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-number">94%</div>
+                    <div class="stat-label">Avg. Match Score</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">$0</div>
+                    <div class="stat-label">Out-of-Pocket</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">2â4</div>
+                    <div class="stat-label">Co-Owners Per Home</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">All 58</div>
+                    <div class="stat-label">CA Counties Covered</div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="pcard-body">
-        <div class="pcard-row">
-          <div class="pcard-item"><div class="pci-lbl">Income</div><div class="pci-val">${incomeLabel(p.income)}</div></div>
-          <div class="pcard-item"><div class="pci-lbl">Budget</div><div class="pci-val">$${(p.budget/1000).toFixed(0)}K</div></div>
+    </div>
+
+    <!-- Problem Section -->
+    <section id="problemSection">
+        <h2>The Dream Isn't Dead. The Math Just Doesn't Work Alone.</h2>
+        <p class="subtitle">California's nurses, firefighters, teachers, and tradespeople have stable incomes and real intent to own â but median home prices in most counties are out of reach for a single income. You're already paying someone else's mortgage in rent. Nexus Homes flips the equation: 2â4 people, one roof, legally protected equity, and a fraction of what you'd pay alone.</p>
+        <div class="problem-cards">
+            <div class="problem-card">
+                <h4>San Francisco</h4>
+                <div class="median">$1.2M â $1.3M</div>
+                <div class="rent">Rent: $5,300 â $7,000/mo</div>
+            </div>
+            <div class="problem-card">
+                <h4>Los Angeles</h4>
+                <div class="median">$920K â $1.1M</div>
+                <div class="rent">Rent: $4,950 â $6,750/mo</div>
+            </div>
+            <div class="problem-card">
+                <h4>San Diego</h4>
+                <div class="median">$889K â $910K</div>
+                <div class="rent">Rent: $4,200 â $10,000/mo</div>
+            </div>
+            <div class="problem-card">
+                <h4>Sacramento</h4>
+                <div class="median">$485K â $510K</div>
+                <div class="rent">Rent: $3,000 â $4,200/mo</div>
+            </div>
+            <div class="problem-card">
+                <h4>San Jose / Silicon Valley</h4>
+                <div class="median">~$1.25M</div>
+                <div class="rent">Rent: $2,500+/mo</div>
+            </div>
+            <div class="problem-card">
+                <h4>Oakland / East Bay</h4>
+                <div class="median">~$650K</div>
+                <div class="rent">Rent: $2,400+/mo</div>
+            </div>
         </div>
-        <div class="dim-bars">
-          ${dimBar('Location',p.dims.loc,'#1D6FA4')}
-          ${dimBar('Income',p.dims.inc,'#5AB034')}
-          ${dimBar('Lifestyle',p.dims.lif,'#F5A623')}
-          ${dimBar('Schedule',p.dims.sch,'#8B3DE8')}
+        <p style="text-align:center;margin-top:2rem;font-size:1.05rem;color:var(--navy);font-weight:600;">Co-ownership is the structural answer. Nexus Match is the platform that makes it feel like a relationship worth entering.</p>
+    </section>
+
+    <!-- Collision Section -->
+    <section id="collisionSection">
+        <h2>The Central Connection: Two Worlds Collide</h2>
+        <p class="subtitle">People already trust apps to find a partner, a roommate, a business connection. Nexus Homes asks one simple question: if you're going to live under a roof â why not own it? We took the matching intelligence of dating platforms, the profile depth of roommate apps, and the mortgage power of Citizens Financial and built something entirely new. No platform in the market has combined all three. Until now.</p>
+        <div class="collision-cols">
+            <div class="collision-card">
+                <h3>The Trust Economy</h3>
+                <p>From Bumble Bizz and Hinge: professional identity is the fastest trust signal. Two people in the same field share a common language, schedule demands, and professional respect that takes strangers months to build. Nexus Match surfaces that trust before the first word is spoken.</p>
+            </div>
+            <div class="collision-card">
+                <h3>The Human Profile</h3>
+                <p>From Roomies.com and RoomieMatch: a great co-owner profile includes a personal bio, living habits, interests, and goals. Budget and personality sit side by side. Neither alone is enough. This is the difference between reviewing a spreadsheet and feeling like you've actually met someone.</p>
+            </div>
+            <div class="collision-card">
+                <h3>The Path to Ownership</h3>
+                <p>Citizens Financial turns a confirmed match into a funded transaction â $0 out-of-pocket, legally protected equity from day one. 2â4 co-owners split every cost equitably. Same neighborhood you love. A fraction of what you'd pay alone. A future that belongs to you.</p>
+            </div>
         </div>
-        <div class="pcard-tags">${(p.hobbies||[]).slice(0,4).map(h=>`<span class="ptag">${h}</span>`).join('')}</div>
-        <button class="connect-btn${conn?' connected':''}" onclick="event.stopPropagation();openConnect('${p.id}')">${conn?'✓ Request Sent':'Connect →'}</button>
-      </div>
-    </div>`;
-  }).join('');
-}
+    </section>
 
-function dimBar(label, val, color){
-  return `<div class="dim-row"><div class="dim-lbl">${label}</div><div class="dim-bar"><div class="dim-fill" style="width:${val}%;background:${color};"></div></div><div class="dim-pct">${val}%</div></div>`;
-}
-
-// ─────────────────────────────────────────────
-//  PROFILE DETAIL
-// ─────────────────────────────────────────────
-function viewProfile(id){
-  const p = S.allProfiles.find(x=>x.id===id);
-  if(!p) return;
-  const u = S.profile;
-  const score = scoreMatch(p, u);
-  const dims  = getDims(p, u);
-  const shared = (u.hobbies||[]).filter(h=>(p.hobbies||[]).includes(h));
-  const conn  = S.connections.has(id);
-  const bg    = CARD_COLORS[S.allProfiles.indexOf(p) % CARD_COLORS.length];
-  const initials = (p.first_name[0]+(p.last_name||'')[0]||'').toUpperCase();
-
-  document.getElementById('pd-content').innerHTML = `
-    <div class="pd-hero-card">
-      <div class="pd-hero-top" style="background:linear-gradient(135deg,${bg},${bg}bb);">
-        <div class="pd-avatar">${initials}</div>
-        <div class="pd-info">
-          <h2>${p.first_name} ${p.last_name}</h2>
-          <div class="pd-sub">🏢 ${p.profession}${p.employer?' · '+p.employer:''}</div>
-          <div class="pd-loc">📍 ${p.city||p.county}, ${p.county} County</div>
+    <!-- 5 Dimensions Section -->
+    <section id="dimensionsSection">
+        <h2>5 Dimensions of Compatibility</h2>
+        <p class="subtitle">Finding a co-owner isn't a checklist â it's a relationship. Every pair is scored across 5 weighted dimensions that measure whether two people can actually share a roof, split costs equitably, and build wealth together. The number on the match card is the total. This is what separates a smart algorithm from a simple search.</p>
+        <div class="dimensions-grid">
+            <div class="dimension-card">
+                <h4>Financial Alignment</h4>
+                <div class="dimension-weight">30%</div>
+                <p>Income, budget, and buying power alignment.</p>
+            </div>
+            <div class="dimension-card">
+                <h4>Location</h4>
+                <div class="dimension-weight">25%</div>
+                <p>County, city, neighborhood, and commute tolerance.</p>
+            </div>
+            <div class="dimension-card">
+                <h4>Lifestyle & Interests</h4>
+                <div class="dimension-weight">20%</div>
+                <p>Hobby clusters and personality compatibility.</p>
+            </div>
+            <div class="dimension-card">
+                <h4>Profession & Schedule</h4>
+                <div class="dimension-weight">15%</div>
+                <p>Career category and daily rhythm alignment.</p>
+            </div>
+            <div class="dimension-card">
+                <h4>Co-Ownership Goals</h4>
+                <div class="dimension-weight">10%</div>
+                <p>Property type, timeline, and exit plans.</p>
+            </div>
         </div>
-        <div class="pd-score-block">
-          <div class="pd-score-num">${score}%</div>
-          <div class="pd-score-label">match score</div>
+        <div class="clusters-section">
+            <h4>5 Lifestyle Clusters</h4>
+            <p style="margin-bottom: 1rem; color: var(--gray-text);">We score whether you're in the same lifestyle cluster, not just matching individual hobbies. A hiker and surfer will coexist far better than a hiker and gamer.</p>
+            <div class="cluster-badges">
+                <div class="cluster-badge">Outdoor & Active</div>
+                <div class="cluster-badge">Home & Social</div>
+                <div class="cluster-badge">Health & Wellness</div>
+                <div class="cluster-badge">Creative & Cultural</div>
+                <div class="cluster-badge">Tech & Professional</div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="pd-section"><h4>📊 Compatibility Breakdown</h4>
-      <div class="compat-bars">
-        ${compatRow('Location / County',dims.loc,'#1D6FA4')}
-        ${compatRow('Income Compatibility',dims.inc,'#5AB034')}
-        ${compatRow('Lifestyle / Hobbies',dims.lif,'#F5A623')}
-        ${compatRow('Work Schedule',dims.sch,'#8B3DE8')}
-      </div>
-    </div>
-    <div class="pd-section"><h4>🏠 Home Goals</h4>
-      <div class="pd-attrs">
-        <div class="attr-item"><div class="al">Target Budget</div><div class="av">$${(p.budget/1000).toFixed(0)}K total</div></div>
-        <div class="attr-item"><div class="al">Your Share (~50%)</div><div class="av">~$${(p.budget/2000).toFixed(0)}K</div></div>
-        <div class="attr-item"><div class="al">Property Type</div><div class="av">${p.prop_type}</div></div>
-        <div class="attr-item"><div class="al">Bedrooms</div><div class="av">${p.beds} BR</div></div>
-        <div class="attr-item"><div class="al">County</div><div class="av">${p.county}</div></div>
-        <div class="attr-item"><div class="al">Est. Monthly (each)</div><div class="av">~$${Math.round(p.budget*0.0055/2).toLocaleString()}/mo</div></div>
-      </div>
-    </div>
-    <div class="pd-section"><h4>💼 Work Life</h4>
-      <div class="pd-attrs">
-        <div class="attr-item"><div class="al">Profession</div><div class="av">${p.profession}</div></div>
-        <div class="attr-item"><div class="al">Category</div><div class="av">${p.prof_category}</div></div>
-        <div class="attr-item"><div class="al">Schedule</div><div class="av">${p.schedule||'—'}</div></div>
-        <div class="attr-item"><div class="al">Max Commute</div><div class="av">${p.commute_max} min</div></div>
-        <div class="attr-item"><div class="al">Income Range</div><div class="av">${incomeLabel(p.income)}</div></div>
-        <div class="attr-item"><div class="al">Co-Owner Pref.</div><div class="av">${p.co_owner_pref||'Open'}</div></div>
-      </div>
-    </div>
-    <div class="pd-section"><h4>🎯 Hobbies & Lifestyle</h4>
-      <div class="pd-hobbies">${(p.hobbies||[]).map(h=>`<span class="pd-htag${shared.includes(h)?' pd-shared-htag':''}">${shared.includes(h)?'⭐ ':''}${h}</span>`).join('')}</div>
-      ${shared.length?`<p style="font-size:12px;color:var(--mid);margin-top:10px;">⭐ = interests you share (${shared.length} in common)</p>`:''}
-    </div>
-    <div class="pd-action-row">
-      <button class="btn btn-primary" style="flex:1;" onclick="openConnect('${p.id}')">${conn?'✓ Request Sent':'Connect with '+p.first_name+' →'}</button>
-      <button class="btn btn-outline" onclick="showAppView('matches')">← Back</button>
-    </div>`;
+    </section>
 
-  showAppView('profile-detail');
-}
-
-function compatRow(label, val, color){
-  return `<div class="compat-row"><div class="compat-label">${label}</div><div class="compat-bar-wrap"><div class="compat-bar-fill" style="width:${val}%;background:${color};"></div></div><div class="compat-pct" style="color:${color};">${val}%</div></div>`;
-}
-
-// ─────────────────────────────────────────────
-//  CONNECT MODAL + SUPABASE INSERT
-// ─────────────────────────────────────────────
-function openConnect(id){
-  if(S.connections.has(id)){ toast('Connection request already sent!','success'); return; }
-  const p = S.allProfiles.find(x=>x.id===id);
-  if(!p) return;
-  const score = scoreMatch(p, S.profile);
-  const bg    = CARD_COLORS[S.allProfiles.indexOf(p) % CARD_COLORS.length];
-  const initials = (p.first_name[0]+(p.last_name||'')[0]||'').toUpperCase();
-
-  document.getElementById('connect-head').innerHTML = `<h2>Connect with ${p.first_name}</h2><p>${score}% compatibility match</p>`;
-  document.getElementById('connect-body').innerHTML = `
-    <div class="connect-modal-avatar" style="background:${bg};">${initials}</div>
-    <h3>${p.first_name} ${p.last_name}</h3>
-    <p>${p.profession} · ${p.city||p.county}, ${p.county} County<br>Looking to co-own in ${p.county}</p>
-    <div class="connect-detail">
-      <div class="connect-detail-row">🏠 <span>Target: $${(p.budget/1000).toFixed(0)}K ${p.prop_type}, ${p.beds}BR</span></div>
-      <div class="connect-detail-row">🕐 <span>Schedule: ${p.schedule||'—'}</span></div>
-      <div class="connect-detail-row">🎯 <span>Top hobbies: ${(p.hobbies||[]).slice(0,3).join(', ')}</span></div>
-      <div class="connect-detail-row">📞 <span>Citizens Financial will facilitate the intro via Gregory Ritchie</span></div>
-    </div>
-    <div style="display:flex;gap:10px;">
-      <button class="btn btn-primary" style="flex:1;" onclick="confirmConnect('${p.id}')">Send Request ✓</button>
-      <button class="btn btn-outline btn-sm" onclick="closeConnect()">Cancel</button>
-    </div>
-    <p style="font-size:11px;color:var(--mid);margin-top:12px;">Your contact info is shared only after both parties consent via Citizens Financial.</p>`;
-  document.getElementById('connect-modal').classList.remove('hidden');
-}
-
-async function confirmConnect(recipientId){
-  if(!S.profile?.id){ toast('Please complete your profile first.','warn'); closeConnect(); return; }
-  closeConnect();
-  showSpinner('Sending connection request…');
-  const recipient = S.allProfiles.find(x=>x.id===recipientId);
-  const { error } = await sb.from('nexus_connections').insert({
-    requester_id: S.profile.id,
-    recipient_id: recipientId,
-    status: 'pending',
-    message: `Hi! I saw your Nexus Match profile and think we could be great co-owners. I'd love to connect through Citizens Financial. — ${S.profile.first_name}`
-  });
-  hideSpinner();
-  if(error && !error.message.includes('duplicate')){ toast('Could not send request: '+error.message,'error'); return; }
-  S.connections.add(recipientId);
-  toast('Connection request sent! Gregory Ritchie at Citizens Financial will be in touch.','success');
-  renderMatches();
-  // Fire email notification to Greg via Supabase Edge Function (non-blocking)
-  try {
-    await sb.functions.invoke('nexus-notify', {
-      body: {
-        requesterName: `${S.profile.first_name} ${S.profile.last_name}`,
-        requesterEmail: S.profile.email || S.user?.email || '',
-        requesterProfession: S.profile.profession,
-        requesterCounty: S.profile.county,
-        recipientName: recipient ? `${recipient.first_name} ${recipient.last_name}` : 'a member',
-        recipientProfession: recipient?.profession || '',
-        recipientCounty: recipient?.county || '',
-      }
-    });
-  } catch(e) { /* silent — notification is best-effort */ }
-}
-
-function closeConnect(){ document.getElementById('connect-modal').classList.add('hidden'); }
-function closeConnectOnBg(e){ if(e.target.id==='connect-modal') closeConnect(); }
-
-// ─────────────────────────────────────────────
-//  MY PROFILE VIEW
-// ─────────────────────────────────────────────
-function renderMyProfile(){
-  const p = S.profile;
-  if(!p){ document.getElementById('my-profile-content').innerHTML='<p style="color:var(--mid);padding:20px;">Complete your onboarding to see your profile.</p>'; return; }
-  const soloBuy = Math.round(p.income * 3.8);
-  const coBuy   = Math.round(p.income * 2 * 3.5);
-  const bg = '#1B3A6B';
-  const initials = (p.first_name[0]+(p.last_name||'')[0]||'').toUpperCase();
-
-  document.getElementById('my-profile-content').innerHTML = `
-    <div class="pd-hero-card" style="margin-bottom:20px;">
-      <div class="pd-hero-top" style="background:linear-gradient(135deg,var(--navy),var(--blue));">
-        <div class="pd-avatar">${initials}</div>
-        <div class="pd-info">
-          <h2>${p.first_name} ${p.last_name}</h2>
-          <div class="pd-sub">🏢 ${p.profession}${p.employer?' · '+p.employer:''}</div>
-          <div class="pd-loc">📍 ${p.city||p.county}, ${p.county} County</div>
+    <!-- NexusLock Section -->
+    <section id="nexusLockSection">
+        <h2>The NexusLock Designation</h2>
+        <p class="subtitle">When a match scores above 80% across ALL five dimensions simultaneously, it earns the NexusLock badge â the gold standard of co-owner compatibility.</p>
+        <div class="collision-cols">
+            <div class="collision-card" style="text-align: center;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">ð</div>
+                <h3>Validated at Every Level</h3>
+                <p>NexusLock means the algorithm confirmed compatibility across finances, location, lifestyle, profession, and co-ownership goals â simultaneously. It shows up on a match card before a user reads a single word. It answers the question every person has when browsing: <em>is this one worth my time?</em> NexusLock says yes.</p>
+            </div>
         </div>
-        <div class="pd-score-block">
-          <div style="font-size:12px;opacity:.7;margin-bottom:4px;">Co-Buy Power</div>
-          <div class="pd-score-num" style="font-size:22px;">$${(coBuy/1000).toFixed(0)}K</div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section id="comparisonSection">
+        <h2>What Makes Nexus Match Different</h2>
+        <p class="subtitle">The dating platforms solve personal compatibility but have no financial layer and no housing mechanism. The roommate platforms solve shared living but operate only in the rental market â no equity, no ownership, no path to a mortgage. The real estate co-investment platforms solve fractional ownership but match investors to assets, not people to people. Nexus Match connects all three tracks into a single user journey.</p>
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Platform</th>
+                        <th>What They Do</th>
+                        <th>What's Missing</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Match.com / Bumble</strong></td>
+                        <td>Personal compatibility</td>
+                        <td>No financial layer, no housing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Roomies / RoomieMatch</strong></td>
+                        <td>Shared living profiles</td>
+                        <td>Rental only â no equity, no ownership</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bungalow / Nesterly</strong></td>
+                        <td>Managed co-living rentals</td>
+                        <td>Landlord model â no path to ownership</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pacaso / Arrived</strong></td>
+                        <td>Fractional real estate</td>
+                        <td>No human compatibility layer</td>
+                    </tr>
+                    <tr style="background: rgba(90,176,52,0.08); border-left: 4px solid var(--green);">
+                        <td><strong style="color:var(--navy);">Nexus Match</strong></td>
+                        <td><strong>All three, combined</strong></td>
+                        <td><strong style="color:var(--green);">Nothing â this is the gap</strong></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-      </div>
-    </div>
-    <div class="pd-section"><h4>📋 Profile Summary</h4>
-      <div class="pd-attrs">
-        <div class="attr-item"><div class="al">Solo Buying Power</div><div class="av">$${soloBuy.toLocaleString()}</div></div>
-        <div class="attr-item"><div class="al">Co-Buying Power</div><div class="av" style="color:var(--green);">$${coBuy.toLocaleString()}</div></div>
-        <div class="attr-item"><div class="al">Target County</div><div class="av">${p.county}</div></div>
-        <div class="attr-item"><div class="al">Max Budget</div><div class="av">$${(p.budget/1000).toFixed(0)}K</div></div>
-        <div class="attr-item"><div class="al">Property Type</div><div class="av">${p.prop_type}</div></div>
-        <div class="attr-item"><div class="al">Bedrooms</div><div class="av">${p.beds} BR</div></div>
-        <div class="attr-item"><div class="al">Work Schedule</div><div class="av">${p.schedule||'—'}</div></div>
-        <div class="attr-item"><div class="al">Co-Owner Pref.</div><div class="av">${p.co_owner_pref||'Open'}</div></div>
-      </div>
-    </div>
-    <div class="pd-section"><h4>🎯 Hobbies & Lifestyle</h4>
-      <div class="pd-hobbies">${(p.hobbies||[]).map(h=>`<span class="pd-htag">${h}</span>`).join('')}</div>
-    </div>
-    <div class="pd-section"><h4>🔗 Connections (${S.connections.size})</h4>
-      <p style="font-size:14px;color:var(--mid);">${S.connections.size>0 ? S.connections.size+' connection request(s) sent. Citizens Financial will facilitate all introductions.' : 'No connections yet. <a href="#" onclick="showAppView(\'matches\')" style="color:var(--blue);font-weight:700;">Browse matches</a> to get started.'}</p>
-    </div>
-    <div style="background:var(--light);border-radius:12px;padding:20px 22px;border:2px solid var(--border);">
-      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;">Ready for the next step?</div>
-      <p style="font-size:13px;color:var(--mid);margin-bottom:14px;">Gregory Ritchie at Citizens Financial can walk you through the $0 out-of-pocket co-ownership program.</p>
-      <a href="mailto:gritchie@citizensfinancial.co" class="btn btn-navy btn-sm">Email Gregory Ritchie →</a>
-    </div>`;
-}
+    </section>
 
-// ─────────────────────────────────────────────
-//  SPINNER + TOAST
-// ─────────────────────────────────────────────
-function showSpinner(msg='Loading…'){ document.getElementById('spinner-label').textContent=msg; document.getElementById('spinner').classList.remove('hidden'); }
-function hideSpinner(){ document.getElementById('spinner').classList.add('hidden'); }
+    <!-- Match Cards Section -->
+    <section id="matchesSection">
+        <h2>Real People. Real Co-Ownership.</h2>
+        <p class="subtitle">Browse how California professionals are finding compatible co-owners â matched by career, lifestyle, location, budget, and shared goals. These are people with stable incomes and genuine intent to own who simply cannot qualify alone.</p>
+        <div class="matches-grid" id="matchesGrid">
+            <!-- Generated by JavaScript -->
+        </div>
+    </section>
 
-let _toastTimer;
-function toast(msg, type='default'){
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = '';
-  if(type !== 'default') el.classList.add(type);
-  el.classList.add('show');
-  clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(() => el.classList.remove('show'), 3800);
-}
-</script>
+    <!-- Process Section -->
+    <section id="processSection">
+        <h2>From Profile to Front Door â In 5 Steps</h2>
+        <p class="subtitle">Nexus Match takes you from isolated dream to shared reality. Every step is designed so that finding a co-owner feels like a relationship worth entering.</p>
+        <div class="process-steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h4>Create Your Profile</h4>
+                <p>Profession, bio in your own voice, living habits, passions, and what matters to you in a co-owner.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h4>Set Your Preferences</h4>
+                <p>County, neighborhood, home type, co-ownership goals â down to "waterfront in Long Beach" or "near trails in Elk Grove."</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h4>See Your Co-Buying Power</h4>
+                <p>Instantly see what 2â4 co-owners can afford together vs. alone. $0 out-of-pocket options shown upfront.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h4>Browse Your Matches</h4>
+                <p>Filter by county, lifestyle cluster, profession, NexusLock score. Find people who share your interests and your zip code.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">5</div>
+                <h4>Connect &amp; Close</h4>
+                <p>Citizens Financial facilitates the introduction, funds the purchase, and protects every co-owner's equity from day one.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section>
+        <div class="cta-section">
+            <h3>You're Going to Live Under a Roof. Make It Yours.</h3>
+            <p style="font-size:1.05rem;max-width:640px;margin:0 auto 1.5rem;">Join California individuals and families who are transforming isolated dreams into shared realities â building genuine, legally protected equity through Nexus Homes co-ownership.</p>
+            <button class="btn-primary" onclick="openAuthModal()" style="font-size:1.05rem;padding:1rem 2rem;">Start My Free Profile â</button>
+            <p style="font-size:0.9rem;margin-top:1rem;opacity:0.75;">Same neighborhood you love. A fraction of what you'd pay alone.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>Nexus Homes Co-Ownership &middot; Nexus Match &middot; Citizens Financial</strong></p>
+        <p>Citizens Financial Group, Inc. &middot; NMLS #2503947 &middot; Serving California Since 2003<br>Licensed Mortgage Broker &middot; Equal Housing Lender</p>
+        <p>Contact: <a href="mailto:gritchie@citizensfinancial.co">Gregory Ritchie &middot; gritchie@citizensfinancial.co</a></p>
+        <p style="margin-top: 1.5rem; font-size: 0.85rem; opacity: 0.8;">Nexus Match is a co-owner compatibility platform powered by Citizens Financial. Match scores are algorithmic estimates based on profile data. Pre-approval figures are preliminary and subject to full underwriting. This is not a commitment to lend. Subject to creditworthiness, income verification, and property eligibility. Equal Housing Opportunity.</p>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Welcome to Nexus Homes Co-Ownership</h3>
+                <button class="modal-close" onclick="closeAuthModal()">â</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchAuthTab('login')">Log In</div>
+                    <div class="tab" onclick="switchAuthTab('register')">Sign Up</div>
+                </div>
+
+                <!-- Login Tab -->
+                <div class="tab-content active" id="loginTab">
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="loginEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width: 100%;">Log In</button>
+                    </form>
+                </div>
+
+                <!-- Register Tab -->
+                <div class="tab-content" id="registerTab">
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" id="regFirstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" id="regLastName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="regEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="regPassword" required>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width: 100%;">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Modal -->
+    <div class="modal" id="onboardingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="onboardingTitle">About You</h3>
+                <button class="modal-close" onclick="closeOnboarding()">â</button>
+            </div>
+            <div class="modal-body" id="onboardingBody">
+                <!-- Generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Detail Modal -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Profile Details</h3>
+                <button class="modal-close" onclick="closeProfile()">â</button>
+            </div>
+            <div class="modal-body" id="profileBody">
+                <!-- Generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Spinner -->
+    <div class="spinner" id="spinner"></div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://tiwsuwbalvnrqsmudjfy.supabase.co';
+        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpd3N1d2JhbHVucnFzbXVkamZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MTExOTcsImV4cCI6MjA4NzE4NzE5N30.SKRaCBsG-ynDkPhZlOphPUj9SqKg-NGCdfcypAIwhk4';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+        // State
+        let currentUser = null;
+        let currentProfile = null;
+        let onboardingStep = 1;
+        let onboardingData = {};
+
+        // Lifestyle Clusters
+        const LIFESTYLE_CLUSTERS = {
+            'Outdoor & Active': ['Hiking', 'Surfing', 'Cycling', 'Running', 'Rock Climbing', 'Camping', 'Swimming', 'Fishing', 'Skiing', 'Kayaking'],
+            'Home & Social': ['Cooking', 'Gardening', 'Board Games', 'Hosting/Entertaining', 'DIY/Home Projects', 'Pets/Animals', 'Wine Tasting'],
+            'Health & Wellness': ['Gym/Fitness', 'Yoga', 'Meditation', 'Martial Arts', 'Dance', 'Nutrition/Meal Prep'],
+            'Creative & Cultural': ['Art/Drawing', 'Music', 'Photography', 'Writing', 'Theater', 'Museums', 'Film/Cinema'],
+            'Tech & Professional': ['Gaming', 'Podcasts/Audio', 'Coding', 'Investing/Finance', 'Entrepreneurship', 'Reading', 'Private Equity']
+        };
+
+        const COUNTIES = [
+            // â Bay Area / San Francisco Metro â
+            {name: 'San Francisco', cities: 'SF, Marina, SOMA, Mission, Sunset, Pacific Heights', median: '$1.2Mâ$1.3M', region: 'Bay Area'},
+            {name: 'San Mateo', cities: 'Daly City, Redwood City, San Mateo, Burlingame, Foster City', median: '$1.3M+', region: 'Bay Area'},
+            {name: 'Santa Clara', cities: 'San Jose, Sunnyvale, Santa Clara, Palo Alto, Mountain View, Cupertino', median: '~$1.25M', region: 'Bay Area'},
+            {name: 'Alameda', cities: 'Oakland, Fremont, Hayward, Berkeley, Pleasanton, Livermore', median: '~$650K+', region: 'Bay Area'},
+            {name: 'Contra Costa', cities: 'Concord, Walnut Creek, Richmond, San Ramon, Antioch, Pittsburg', median: '~$700K', region: 'Bay Area'},
+            {name: 'Solano', cities: 'Fairfield, Vallejo, Vacaville, Benicia, Dixon', median: '~$500K', region: 'Bay Area'},
+            {name: 'Marin', cities: 'San Rafael, Novato, Mill Valley, Tiburon, Sausalito', median: '~$1.4M', region: 'Bay Area'},
+            {name: 'Sonoma', cities: 'Santa Rosa, Petaluma, Rohnert Park, Windsor, Healdsburg', median: '~$750K', region: 'Bay Area'},
+            {name: 'Napa', cities: 'Napa, American Canyon, St. Helena, Calistoga', median: '~$800K', region: 'Bay Area'},
+            {name: 'Santa Cruz', cities: 'Santa Cruz, Watsonville, Scotts Valley, Capitola', median: '~$1.0M', region: 'Bay Area'},
+            // â Los Angeles Metro â
+            {name: 'Los Angeles', cities: 'LA, Long Beach, Torrance, Santa Monica, Pasadena, Glendale', median: '$920Kâ$1.1M', region: 'SoCal'},
+            {name: 'Orange', cities: 'Anaheim, Irvine, Santa Ana, Huntington Beach, Fullerton', median: '$1.0M+', region: 'SoCal'},
+            {name: 'Ventura', cities: 'Ventura, Oxnard, Thousand Oaks, Simi Valley, Camarillo', median: '~$800K', region: 'SoCal'},
+            // â San Diego Metro â
+            {name: 'San Diego', cities: 'San Diego, Chula Vista, El Cajon, Coronado, Oceanside, Carlsbad', median: '$889Kâ$910K', region: 'SoCal'},
+            // â Inland Empire â
+            {name: 'Riverside', cities: 'Riverside, Temecula, Murrieta, Corona, Palm Springs, Hemet', median: '~$668K', region: 'Inland Empire'},
+            {name: 'San Bernardino', cities: 'San Bernardino, Rancho Cucamonga, Ontario, Fontana, Victorville', median: '~$500K', region: 'Inland Empire'},
+            // â Sacramento Metro â
+            {name: 'Sacramento', cities: 'Sacramento, Elk Grove, Roseville, Folsom, Rancho Cordova', median: '$485Kâ$510K', region: 'Sacramento'},
+            {name: 'Placer', cities: 'Roseville, Rocklin, Lincoln, Auburn, Tahoe City', median: '~$650K', region: 'Sacramento'},
+            {name: 'El Dorado', cities: 'Placerville, El Dorado Hills, South Lake Tahoe, Cameron Park', median: '~$600K', region: 'Sacramento'},
+            {name: 'Yolo', cities: 'Davis, Woodland, West Sacramento, Winters', median: '~$550K', region: 'Sacramento'},
+            // â San Joaquin / Central Valley â
+            {name: 'San Joaquin', cities: 'Stockton, Tracy, Lodi, Manteca, Ripon', median: '$350Kâ$500K', region: 'Central Valley'},
+            {name: 'Stanislaus', cities: 'Modesto, Turlock, Ceres, Patterson, Oakdale', median: '~$420K', region: 'Central Valley'},
+            {name: 'Fresno', cities: 'Fresno, Clovis, Selma, Sanger, Kerman', median: '~$415K', region: 'Central Valley'},
+            {name: 'Kern', cities: 'Bakersfield, Tehachapi, Delano, Ridgecrest, Wasco', median: '~$380K', region: 'Central Valley'},
+            {name: 'Tulare', cities: 'Visalia, Tulare, Porterville, Dinuba, Lindsay', median: '~$340K', region: 'Central Valley'},
+            {name: 'Kings', cities: 'Hanford, Lemoore, Corcoran, Avenal', median: '~$310K', region: 'Central Valley'},
+            {name: 'Madera', cities: 'Madera, Chowchilla, Oakhurst', median: '~$380K', region: 'Central Valley'},
+            {name: 'Merced', cities: 'Merced, Los Banos, Atwater, Livingston', median: '~$390K', region: 'Central Valley'},
+            // â Central Coast â
+            {name: 'Monterey', cities: 'Monterey, Salinas, Seaside, Marina, Pacific Grove', median: '~$750K', region: 'Central Coast'},
+            {name: 'San Luis Obispo', cities: 'San Luis Obispo, Paso Robles, Atascadero, Arroyo Grande', median: '~$780K', region: 'Central Coast'},
+            {name: 'Santa Barbara', cities: 'Santa Barbara, Santa Maria, Lompoc, Goleta, Carpinteria', median: '~$850K', region: 'Central Coast'},
+            {name: 'San Benito', cities: 'Hollister, San Juan Bautista', median: '~$700K', region: 'Central Coast'},
+            // â North State / Redding Area â
+            {name: 'Shasta', cities: 'Redding, Anderson, Shasta Lake', median: '~$350K', region: 'North State'},
+            {name: 'Butte', cities: 'Chico, Paradise, Oroville, Gridley', median: '~$380K', region: 'North State'},
+            {name: 'Tehama', cities: 'Red Bluff, Corning, Tehama', median: '~$300K', region: 'North State'},
+            {name: 'Siskiyou', cities: 'Yreka, Mt. Shasta, Weed, Dunsmuir', median: '~$280K', region: 'North State'},
+            {name: 'Lassen', cities: 'Susanville, Westwood, Janesville', median: '~$250K', region: 'North State'},
+            {name: 'Modoc', cities: 'Alturas, Cedarville, Adin', median: '~$200K', region: 'North State'},
+            {name: 'Trinity', cities: 'Weaverville, Hayfork, Lewiston', median: '~$275K', region: 'North State'},
+            {name: 'Plumas', cities: 'Quincy, Portola, Graeagle', median: '~$330K', region: 'North State'},
+            {name: 'Glenn', cities: 'Willows, Orland, Hamilton City', median: '~$310K', region: 'North State'},
+            // â North Coast â
+            {name: 'Humboldt', cities: 'Eureka, Arcata, Fortuna, McKinleyville', median: '~$380K', region: 'North Coast'},
+            {name: 'Del Norte', cities: 'Crescent City, Smith River, Klamath', median: '~$290K', region: 'North Coast'},
+            {name: 'Mendocino', cities: 'Ukiah, Fort Bragg, Willits, Point Arena', median: '~$450K', region: 'North Coast'},
+            {name: 'Lake', cities: 'Lakeport, Clearlake, Kelseyville, Lower Lake', median: '~$290K', region: 'North Coast'},
+            // â Gold Country / Sierra Foothills â
+            {name: 'Nevada', cities: 'Grass Valley, Nevada City, Truckee, Penn Valley', median: '~$525K', region: 'Gold Country'},
+            {name: 'Amador', cities: 'Jackson, Sutter Creek, Plymouth, Ione', median: '~$420K', region: 'Gold Country'},
+            {name: 'Calaveras', cities: 'Angels Camp, San Andreas, Arnold, Murphys', median: '~$400K', region: 'Gold Country'},
+            {name: 'Tuolumne', cities: 'Sonora, Jamestown, Twain Harte, Groveland', median: '~$380K', region: 'Gold Country'},
+            {name: 'Mariposa', cities: 'Mariposa, Coulterville, El Portal', median: '~$375K', region: 'Gold Country'},
+            // â Yuba-Sutter â
+            {name: 'Sutter', cities: 'Yuba City, Live Oak, Meridian', median: '~$390K', region: 'Sacramento'},
+            {name: 'Yuba', cities: 'Marysville, Wheatland, Olivehurst', median: '~$370K', region: 'Sacramento'},
+            // â Far North / Mountain â
+            {name: 'Sierra', cities: 'Downieville, Loyalton, Sierraville', median: '~$275K', region: 'North State'},
+            {name: 'Alpine', cities: 'Markleeville, Bear Valley, Kirkwood', median: '~$350K', region: 'Gold Country'},
+            {name: 'Mono', cities: 'Mammoth Lakes, Bridgeport, Lee Vining, June Lake', median: '~$550K', region: 'Gold Country'},
+            {name: 'Inyo', cities: 'Bishop, Lone Pine, Big Pine, Independence', median: '~$350K', region: 'Gold Country'},
+            {name: 'Colusa', cities: 'Colusa, Williams, Arbuckle', median: '~$330K', region: 'Central Valley'},
+            // â Desert / Imperial â
+            {name: 'Imperial', cities: 'El Centro, Calexico, Brawley, Holtville', median: '~$300K', region: 'SoCal'}
+        ];
+
+        const NEIGHBORHOODS = {
+            // Bay Area
+            'San Francisco': ['Marina District','SOMA','Mission District','Sunset','Richmond','Pacific Heights','Noe Valley','Castro','Hayes Valley','Potrero Hill','Dogpatch','Bayview','Excelsior','Bernal Heights','Inner Sunset','Outer Sunset','North Beach','Russian Hill','Telegraph Hill','Financial District'],
+            'San Mateo': ['Daly City','Redwood City','San Mateo','Burlingame','Foster City','Half Moon Bay','Pacifica','San Carlos','Belmont','Millbrae','South San Francisco'],
+            'Santa Clara': ['Downtown San Jose','Willow Glen','Almaden','Evergreen','Berryessa','Campbell','Los Gatos','Milpitas','Cupertino','Palo Alto','Mountain View','Sunnyvale','Santa Clara'],
+            'Alameda': ['Downtown Oakland','Rockridge','Temescal','Lake Merritt','Montclair','Piedmont','Fruitvale','Jack London Square','Fremont','Hayward','Berkeley','Pleasanton','Livermore','Dublin','Union City','Newark'],
+            'Contra Costa': ['Concord','Walnut Creek','Pleasant Hill','San Ramon','Danville','Martinez','Pittsburg','Antioch','Brentwood','Orinda','Lafayette','Moraga','Clayton'],
+            'Solano': ['Fairfield','Vallejo','Vacaville','Benicia','Dixon','Suisun City','Rio Vista'],
+            'Marin': ['San Rafael','Novato','Mill Valley','Tiburon','Sausalito','Corte Madera','Larkspur','San Anselmo','Fairfax','Stinson Beach','Point Reyes'],
+            'Sonoma': ['Santa Rosa','Petaluma','Rohnert Park','Windsor','Healdsburg','Sebastopol','Cotati','Sonoma','Cloverdale','Bodega Bay'],
+            'Napa': ['Napa','American Canyon','St. Helena','Calistoga','Yountville'],
+            'Santa Cruz': ['Santa Cruz','Watsonville','Scotts Valley','Capitola','Aptos','Soquel','Felton','Ben Lomond'],
+            // SoCal
+            'Los Angeles': ['Long Beach Waterfront','Silver Lake','Echo Park','Torrance','Pasadena','Glendale','Culver City','Venice','Downtown LA','Highland Park','Eagle Rock','Koreatown','West Hollywood','Mar Vista','Santa Monica','Manhattan Beach','Hermosa Beach','Redondo Beach','El Segundo','Burbank','Alhambra','Monrovia','Altadena','West LA','Westwood','Brentwood','Encino','Sherman Oaks','Studio City','North Hollywood','Woodland Hills','Calabasas','Whittier','Downey','Cerritos','Lakewood','San Pedro','Wilmington','Carson','Compton','Inglewood','Hawthorne'],
+            'Orange': ['Anaheim','Irvine','Santa Ana','Huntington Beach','Fullerton','Costa Mesa','Newport Beach','Laguna Beach','Mission Viejo','Lake Forest','Tustin','Yorba Linda','Brea','Placentia','San Clemente','Dana Point','Aliso Viejo','Rancho Santa Margarita','Orange','Garden Grove','Westminster','Buena Park'],
+            'Ventura': ['Ventura','Oxnard','Thousand Oaks','Simi Valley','Camarillo','Moorpark','Fillmore','Santa Paula','Ojai','Port Hueneme'],
+            'San Diego': ['Coronado','La Jolla','Pacific Beach','North Park','Hillcrest','Chula Vista','El Cajon','Oceanside','Carlsbad','Escondido','Encinitas','Del Mar','Solana Beach','Poway','Santee','La Mesa','Imperial Beach','National City','Rancho Bernardo','Scripps Ranch','Mira Mesa','Carel Valley','Point Loma','Ocean Beach','Mission Beach','Gaslamp District'],
+            // Inland Empire
+            'Riverside': ['Riverside','Temecula','Murrieta','Corona','Palm Springs','Palm Desert','Hemet','Menifee','Lake Elsinore','Perris','Moreno Valley','Beaumont','Banning','Indio','Coachella','Cathedral City','Rancho Mirage','La Quinta','Idyllwild','Norco','Jurupa Valley','Eastvale','Wildomar'],
+            'San Bernardino': ['San Bernardino','Rancho Cucamonga','Ontario','Fontana','Upland','Redlands','Rialto','Chino','Chino Hills','Victorville','Hesperia','Apple Valley','Yucaipa','Highland','Big Bear Lake','Lake Arrowhead','Claremont','Montclair','Colton','Barstow','Twentynine Palms','Joshua Tree'],
+            // Sacramento Metro
+            'Sacramento': ['Midtown','East Sacramento','Land Park','Natomas','Elk Grove','Folsom','Rancho Cordova','Arden-Arcade','Carmichael','Fair Oaks','Citrus Heights','Orangevale','North Highlands','Antelope','Rio Linda'],
+            'Placer': ['Roseville','Rocklin','Lincoln','Auburn','Granite Bay','Loomis','Newcastle','Tahoe City','North Lake Tahoe'],
+            'El Dorado': ['El Dorado Hills','Cameron Park','Placerville','Shingle Springs','Pollock Pines','South Lake Tahoe','Georgetown'],
+            'Yolo': ['Davis','Woodland','West Sacramento','Winters','Esparto'],
+            // Central Valley
+            'San Joaquin': ['Stockton','Tracy','Lodi','Manteca','Ripon','Escalon','Lathrop','Mountain House'],
+            'Stanislaus': ['Modesto','Turlock','Ceres','Patterson','Oakdale','Riverbank','Hughson','Newman'],
+            'Fresno': ['Fresno','Clovis','Selma','Sanger',Kerman','Reedley','Kingsburg','Coalinga','Fresno North','Fresno South','Fig Garden','Woodward Park'],
+            'Kern': ['Bakersfield','Tehachapi','Delano','Ridgecrest','Wasco','Shafter','Taft','McFarland','Arvin','Rosedale','Seven Oaks'],
+            'Tulare': ['Visalia','Tulare','Porterville','Dinuba','Lindsay','Exeter','Woodlake','Three Rivers'],
+            'Kings': ['Hanford','Lemoore','Corcoran','Avenal'],
+            'Madera': ['Madera','Chowchilla','Oakhurst','Bass Lake','North Fork'],
+            'Merced': ['Merced','Los Banos','Atwater','Livingston','Gustine','Winton'],
+            // Central Coast
+             'Monterey': ['Monterey','Salinas','Seaside','Marina','Pacific Grove','Carmel-by-the-Sea','Pebble Beach','King City','Soledad','Gonzales'],
+            'San Luis Obispo': ['San Luis Obispo','Paso Robles','Atascadero','Arroyo Grande','Pismo Beach','Morro Bay','Grover Beach','Templeton','Cambria'],
+            'Santa Barbara': ['Santa Barbara','Santa Maria','Lompoc','Goleta','Carpinteria','Montecito','Isla Vista','Solvang','Buellton','Guadalupe'],
+            'San Benito': ['Hollister','San Juan Bautista','Tres Pinos'],
+            // North State
+            'Shasta': ['Redding','Anderson','Shasta Lake','Palo Cedro','Cottonwood'],
+            'Butte': ['Chico','Paradise','Oroville','Gridley','Biggs','Durham','Magalia'],
+            'Tehama': ['Red Bluff','Corning','Los Molinos'],
+            'Siskiyou': ['Yreka','Mt. Shasta','Weed','Dunsmuir','Etna','Fort Jones'],
+            'Humboldt': ['Eureka','Arcata','Fortuna','McKinleyville','Blue Lake','Trinidad','Ferndale'],
+            'Del Norte': ['Crescent City','Smith River','Klamath'],
+            'Mendocino': ['Ukiah','Fort Bragg','Willits','Point Arena','Philo','Boonville'],
+            'Lake': ['Lakeport','Clearlake','Kelseyville','Lower Lake','Nice','Lucerne'],
+            // Gold Country / Sierra
+            'Nevada': ['Grass Valley','Nevada City','Truckee','Penn Valley','Lake of the Pines'],
+            'Amador': ['Jackson','Sutter Creek','Plymouth','Ione','Pine Grove'],
+            'Calaveras': ['Angels Camp','San Andreas','Arnold','Murphys','Valley Springs','Copperopolis'],
+            'Tuolumne': ['Sonora','Jamestown','Twain Harte','Groveland','Mi-Wuk Village'],
+            'Mariposa': ['Mariposa','Coulterville','El Portal','Midpines'],
+            'Mono': ['Mammoth Lakes','Bridgeport','Lee Vining','June Lake','Crowley Lake'],
+            'Inyo': ['Bishop','Lone Pine','Big Pine','Independence'],
+            // Yuba-Sutter
+            'Sutter': ['Yuba City','Live Oak','Meridian'],
+            'Yuba': ['Marysville','Wheatland','Olivehurst','Linda','Plumas Lake'],
+            // Others
+            'Lassen': ['Susanville','Westwood','Janesville'],
+            'Modoc': ['Alturas','Cedarville'],
+            'Trinity': ['Weaverville','Hayfork','Lewiston'],
+            'Plumas': ['Quincy','Portola','Graeagle','Chester'],
+            'Glenn': ['Willows','Orland','Hamilton City'],
+            'Sierra': ['Downieville','Loyalton','Sierraville'],
+            'Alpine': ['Markleeville','Bear Valley','Kirkwood'],
+            'Colusa': ['Colusa','Williams','Arbuckle'],
+            'Imperial': ['El Centro','Calexico','Brawley','Holtville','Imperial','Calipatria','Westmorland']
+        };
+
+        const PROFESSIONS = ['Nurse', 'Firefighter', 'Police Officer', 'Teacher', 'Software Engineer', 'Financial Analyst', 'Architect', 'Electrician', 'Plumber', 'Carpenter', 'Healthcare', 'Tech', 'Finance', 'Education'];
+
+        // Sample Profiles for Demo
+        const SAMPLE_PROFILES = [
+            {
+                id: '1', initials: 'MR', name: 'Marcus R.', profession: 'Firefighter', city: 'Long Beach', county: 'Los Angeles',
+                match: 94, cluster: 'Outdoor & Active', bio: 'Love morning hikes and beach days. Looking to invest in waterfront property.',
+                hobbies: ['Hiking', 'Surfing', 'Gym/Fitness', 'Swimming'], income: '$95K', budget: '$600K', nexusLock: true,
+                dims: {financial: 92, location: 94, lifestyle: 95, profession: 90, goals: 88}
+            },
+            {
+                id: '2', initials: 'JT', name: 'Jasmine T.', profession: 'Registered Nurse', city: 'Anaheim', county: 'Orange',
+                match: 88, cluster: 'Health & Wellness', bio: 'Yoga enthusiast and wellness advocate. Want to build equity together.',
+                hobbies: ['Yoga', 'Meditation', 'Cooking', 'Nutrition/Meal Prep'], income: '$85K', budget: '$550K', nexusLock: false,
+                dims: {financial: 85, location: 88, lifestyle: 87, profession: 86, goals: 84}
+            },
+            {
+                id: '3', initials: 'DK', name: 'Devon K.', profession: 'Teacher', city: 'Elk Grove', county: 'Sacramento',
+                match: 91, cluster: 'Home & Social', bio: 'Community-focused educator. Gardening and DIY projects are my jam.',
+                hobbies: ['Gardening', 'DIY/Home Projects', 'Reading', 'Board Games'], income: '$75K', budget: '$400K', nexusLock: true,
+                dims: {financial: 90, location: 92, lifestyle: 91, profession: 89, goals: 90}
+            },
+            {
+                id: '4', initials: 'SR', name: 'Sofia R.', profession: 'Police Officer', city: 'Concord', county: 'Contra Costa',
+                match: 87, cluster: 'Outdoor & Active', bio: 'Runner and traveler. Want a home with space and community.',
+                hobbies: ['Running', 'Travel', 'Cycling', 'Camping'], income: '$100K', budget: '$550K', nexusLock: false,
+                dims: {financial: 86, location: 87, lifestyle: 86, profession: 88, goals: 85}
+            },
+            {
+                id: '5', initials: 'AM', name: 'Alex M.', profession: 'Software Engineer', city: 'San Jose', county: 'Santa Clara',
+                match: 92, cluster: 'Tech & Professional', bio: 'Tech startup enthusiast. Love gaming and photography on weekends.',
+                hobbies: ['Gaming', 'Cycling', 'Photography', 'Coding'], income: '$150K', budget: '$950K', nexusLock: true,
+                dims: {financial: 93, location: 90, lifestyle: 92, profession: 94, goals: 89}
+            },
+            {
+                id: '6', initials: 'PN', name: 'Priya N.', profession: 'Financial Analyst', city: 'San Francisco', county: 'San Francisco',
+                match: 89, cluster: 'Creative & Cultural', bio: 'Wine enthusiast and art collector. Smart investing in real estate.',
+                hobbies: ['Wine Tasting', 'Art/Drawing', 'Museums', 'Hiking'], income: '$120K', budget: '$850K', nexusLock: false,
+                dims: {financial: 90, location: 88, lifestyle: 89, profession: 87, goals: 86}
+            }
+        ];
+
+        // Init
+        async function init() {
+            checkAuth();
+            renderMatches();
+        }
+
+        function checkAuth() {
+            const user = localStorage.getItem('nm_user');
+            if (user) {
+                currentUser = JSON.parse(user);
+                updateNavigation();
+            }
+        }
+
+        function updateNavigation() {
+            const nav = document.getElementById('navRight');
+            if (currentUser) {
+                const initials = (currentUser.firstName[0] + currentUser.lastName[0]).toUpperCase();
+                nav.innerHTML = `
+                    <div class="user-avatar">${initials}</div>
+                    <span class="nav-link" style="margin: 0;">${currentUser.firstName}</span>
+                    <a class="nav-link" onclick="handleSignOut()">Sign Out</a>
+                `;
+            }
+        }
+
+        function openAuthModal() {
+            document.getElementById('authModal').classList.add('active');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            showSpinner();
+            try {
+                const firstName = document.getElementById('regFirstName').value;
+                const lastName = document.getElementById('regLastName').value;
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+
+                const { data, error } = await supabase.auth.signUp({ email, password });
+                if (error) throw error;
+
+                currentUser = {
+                    id: data.user.id,
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName
+                };
+                localStorage.setItem('nm_user', JSON.stringify(currentUser));
+                updateNavigation();
+                closeAuthModal();
+                showOnboarding();
+                showToast('Account created! Let\'s build your profile.', 'success');
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+            hideSpinner();
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            showSpinner();
+            try {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+
+                const { data: profile } = await supabase.from('nexus_profiles').select('*').eq('user_id', data.user.id).single();
+
+                currentUser = {
+                    id: data.user.id,
+                    email: email,
+                    firstName: profile?.first_name || 'User',
+                    lastName: profile?.last_name || ''
+                };
+                currentProfile = profile;
+                localStorage.setItem('nm_user', JSON.stringify(currentUser));
+                updateNavigation();
+                closeAuthModal();
+
+                if (!profile || !profile.profile_complete) {
+                    showOnboarding();
+                } else {
+                    showMatches();
+                }
+                showToast('Logged in successfully!', 'success');
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+            hideSpinner();
+        }
+
+        function handleSignOut() {
+            currentUser = null;
+            currentProfile = null;
+            localStorage.removeItem('nm_user');
+            updateNavigation();
+            renderMatches();
+            showToast('Signed out.', 'success');
+        }
+
+        function showOnboarding() {
+            onboardingStep = 1;
+            onboardingData = {};
+            renderOnboardingStep();
+            document.getElementById('onboardingModal').classList.add('active');
+        }
+
+        function closeOnboarding() {
+            document.getElementById('onboardingModal').classList.remove('active');
+        }
+
+        function renderOnboardingStep() {
+            const title = document.getElementById('onboardingTitle');
+            const body = document.getElementById('onboardingBody');
+
+            const steps = {
+                1: {
+                    title: 'About You',
+                    content: `
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" id="step1_firstName" value="${onboardingData.firstName || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" id="step1_age" value="${onboardingData.age || ''}" min="18" max="120" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select id="step1_gender" required>
+                                <option value="">Select...</option>
+                                <option value="M" ${onboardingData.gender === 'M' ? 'selected' : ''}>Male</option>
+                                <option value="F" ${onboardingData.gender === 'F' ? 'selected' : ''}>Female</option>
+                                <option value="NB" ${onboardingData.gender === 'NB' ? 'selected' : ''}>Non-binary</option>
+                                <option value="Other" ${onboardingData.gender === 'Other' ? 'selected' : ''}>Other</option>
+                            </select>
+                        </div>
+                        <button onclick="nextOnboardingStep(1)" class="btn-primary" style="width: 100%;">Next â</button>
+                    `
+                },
+                2: {
+                    title: 'Your Career',
+                    content: `
+                        <div class="form-group">
+                            <label>Profession</label>
+                            <select id="step2_profession" required>
+                                <option value="">Select profession...</option>
+                                ${PROFESSIONS.map(p => `<option value="${p}" ${onboardingData.profession === p ? 'selected' : ''}>${p}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Employer</label>
+                            <input type="text" id="step2_employer" value="${onboardingData.employer || ''}" required>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button onclick="prevOnboardingStep(2)" class="btn-outline" style="flex: 1;">â Back</button>
+                            <button onclick="nextOnboardingStep(2)" class="btn-primary" style="flex: 1;">Next â</button>
+                        </div>
+                    `
+                },
+                3: {
+                    title: 'Annual Income',
+                    content: `
+                        <div class="form-group">
+                            <label>Annual Income: $${(onboardingData.income || 75000).toLocaleString()}</label>
+                            <input type="range" id="step3_income" min="30000" max="250000" step="5000" value="${onboardingData.income || 75000}" oninput="document.querySelector('label').textContent = 'Annual Income: $' + this.value.toLocaleString()" style="width: 100%; height: 6px; margin-top: 1rem;">
+                            <div style="margin-top: 1rem; text-align: center; color: var(--green); font-weight: 700;">$${(document.getElementById('step3_income')?.value || 75000).toLocaleString()}</div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <button onclick="prevOnboardingStep(3)" class="btn-outline" style="flex: 1;">â Back</button>
+                            <button onclick="nextOnboardingStep(3)" class="btn-primary" style="flex: 1;">Next â</button>
+                        </div>
+                    `
+                },
+                4: {
+                    title: 'Location Preferences',
+                    content: `
+                        <div class="form-group">
+                            <label>County</label>
+                            <select id="step4_county" required>
+                                <option value="">Select county...</option>
+                                ${(() => {
+                                    const regions = {};
+                                    COUNTIES.forEach(c => { if (!regions[c.region]) regions[c.region] = []; regions[c.region].push(c); });
+                                    const order = ['Bay Area','SoCal','Inland Empire','Sacramento','Central Valley','Central Coast','North State','North Coast','Gold Country'];
+                                    return order.map(r => regions[r] ? `<optgroup label="â ${r} â">${regions[r].map(c => `<option value="${c.name}" ${onboardingData.county === c.name ? 'selected' : ''}>${c.name} â ${c.cities.split(',')[0]}</option>`).join('')}</optgroup>` : '').join('');
+                                })()}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>City/Neighborhood</label>
+                            <input type="text" id="step4_city" value="${onboardingData.city || ''}" placeholder="Enter preferred city or neighborhood" required>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button onclick="prevOnboardingStep(4)" class="btn-outline" style="flex: 1;">â Back</button>
+                            <button onclick="nextOnboardingStep(4)" class="btn-primary" style="flex: 1;">Next â</button>
+                        </div>
+                    `
+                },
+                5: {
+                    title: 'Home Budget',
+                    content: `
+                        <div class="form-group">
+                            <label>Budget: $${(onboardingData.budget || 500000).toLocaleString()}</label>
+                            <input type="range" id="step5_budget" min="200000" max="2000000" step="50000" value="${onboardingData.budget || 500000}" style="width: 100%; height: 6px; margin-top: 1rem;">
+                            <div style="margin-top: 1rem; text-align: center; color: var(--green); font-weight: 700;">$${(document.getElementById('step5_budget')?.value || 500000).toLocaleString()}</div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <button onclick="prevOnboardingStep(5)" class="btn-outline" style="flex: 1;">â Back</button>
+                            <button onclick="nextOnboardingStep(5)" class="btn-primary" style="flex: 1;">Next â</button>
+                        </div>
+                    `
+                },
+                6: {
+                    title: 'Property Type',
+                    content: `
+                        <div class="form-group">
+                            <label>Property Type</label>
+                            <select id="step6_propType" required>
+                                <option value="">Select...</option>
+                                <option value="Single Family" ${onboardingData.propType === 'Single Family' ? 'selected' : ''}>Single Family Home</option>
+                                <option value="Townhome" ${onboardingData.propType === 'Townhome' ? 'selected' : ''}>Townhome</option>
+                                <option value="Condo" ${onboardingData.propType === 'Condo' ? 'selected' : ''}>Condo</option>
+                                <option value="Duplex" ${onboardingData.propType === 'Duplex' ? 'selected' : ''}>Duplex</option>
+                                <option value="Multi-Unit" ${onboardingData.propType === 'Multi-Unit' ? 'selected' : ''}>Multi-Unit</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Bedrooms</label>
+                            <select id="step6_beds" required>
+                                <option value="">Select...</option>
+                                <option value="2" ${onboardingData.beds === '2' ? 'selected' : ''}>2 Bedrooms</option>
+                                <option value="3" ${onboardingData.beds === '3' ? 'selected' : ''}>3 Bedrooms</option>
+                                <option value="4" ${onboardingData.beds === '4' ? 'selected' : ''}>4 Bedrooms</option>
+                                <option value="5" ${onboardingData.beds === '5' ? 'selected' : ''}>5+ Bedrooms</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button onclick="prevOnboardingStep(6)" class="btn-outline" style="flex: 1;">â Back</button>
+                            <button onclick="nextOnboardingStep(6)" class="btn-primary" style="flex: 1;">Next â</button>
+                        </div>
+                    `
+                },
+                7: {
+                    title: 'Co-Ownership Goals',
+                    content: `
+                        <div class="form-group">
+                            <label>Exit Timeline</label>
+                            <select id="step7_exit" required>
+                                <option value="">Select...</option>
+                                <option value="3-5 years" ${onboardingData.exitTimeline === '3-5 years' ? 'selected' : ''}>3-5 years</option>
+                                <option value="5-10 years" ${onboardingData.exitTimeline === '5-10 years' ? 'selected' : ''}>5-10 years</option>
+                                <option value="10+ years" ${onboardingData.exitTimeline === '10+ years' ? 'selected' : ''}>10+ years</option>
+                                <option value="No exit planned" ${onboardingData.exitTimeline === 'No exit planned' ? 'selected' : ''}>No exit planned</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Renovation Appetite</label>
+                            <select id="step7_renovation" required>
+                                <option value="">Select...</option>
+                                <option value="None" ${onboardingData.renovationAppetite === 'None' ? 'selected' : ''}>None</option>
+                                <option value="Light cosmetic" ${onboardingData.renovationAppetite === 'Light cosmetic' ? 'selected' : ''}>Light cosmetic</option>
+                                <option value="Major renovation" ${onboardingData.renovationAppetite === 'Major renovation' ? 'selected' : ''}>Major renovation</option>
+                                <option value="Full remodel" ${onboardingData.renovationAppetite === 'Full remodel' ? 'selected' : ''}>Full remodel</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button onclick="prevOnboardingStep(7)" class="btn-outline" style="flex: 1;">â Back</button>
+                            <button onclick="nextOnboardingStep(7)" class="btn-primary" style="flex: 1;">Next â</button>
+                        </div>
+                    `
+                },
+                8: {
+                    title: 'Tell Us About Yourself',
+                    content: `
+                        <div class="form-group">
+                            <label>Personal Bio (2-3 sentences)</label>
+                            <textarea id="step8_bio" maxlength="200" required placeholder="What should potential co-owners know about you?">${onboardingData.bio || ''}</textarea>
+                            <small style="color: var(--gray-text);">${(onboardingData.bio || '').length}/200 characters</small>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button onclick="prevOnboardingStep(8)" class="btn-outline" style="flex: 1;">â Back</button>
+                            <button onclick="nextOnboardingStep(8)" class="btn-primary" style="flex: 1;">Next â</button>
+                        </div>
+                    `
+                },
+                9: {
+                    title: 'Hobbies & Interests',
+                    content: `
+                        <p style="margin-bottom: 1.5rem; color: var(--gray-text);">Select 3-8 hobbies that match your lifestyle.</p>
+                        ${Object.entries(LIFESTYLE_CLUSTERS).map(([cluster, hobbies]) => `
+                            <div style="margin-bottom: 1.5rem;">
+                                <h4 style="color: var(--navy); font-size: 0.95rem; margin-bottom: 0.75rem;">${cluster}</h4>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                                    ${hobbies.map(h => `
+                                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: var(--light-bg); padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem;">
+                                            <input type="checkbox" value="${h}" class="hobby-checkbox" ${(onboardingData.hobbies || []).includes(h) ? 'checked' : ''}>
+                                            ${h}
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <button onclick="prevOnboardingStep(9)" class="btn-outline" style="flex: 1;">â Back</button>
+                            <button onclick="nextOnboardingStep(9)" class="btn-primary" style="flex: 1;">Next â</button>
+                        </div>
+                    `
+                },
+                10: {
+                    title: 'Living Habits',
+                    content: `
+                        <div class="form-group">
+                            <label>Noise Tolerance</label>
+                            <select id="step10_noise" required>
+                                <option value="">Select...</option>
+                                <option value="Quiet" ${onboardingData.noiseTolerance === 'Quiet' ? 'selected' : ''}>Quiet</option>
+                                <option value="Moderate" ${onboardingData.noiseTolerance === 'Moderate' ? 'selected' : ''}>Moderate</option>
+                                <option value="Lively" ${onboardingData.noiseTolerance === 'Lively' ? 'selected' : ''}>Lively</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Sleep Schedule</label>
+                            <select id="step10_sleep" required>
+                                <option value="">Select...</option>
+                                <option value="Early bird" ${onboardingData.sleepSchedule === 'Early bird' ? 'selected' : ''}>Early bird</option>
+                                <option value="Night owl" ${onboardingData.sleepSchedule === 'Night owl' ? 'selected' : ''}>Night owl</option>
+                                <option value="Flexible" ${onboardingData.sleepSchedule === 'Flexible' ? 'selected' : ''}>Flexible</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Cleanliness Level</label>
+                            <select id="step10_clean" required>
+                                <option value="">Select...</option>
+                                <option value="Very tidy" ${onboardingData.cleaniness === 'Very tidy' ? 'selected' : ''}>Very tidy</option>
+                                <option value="Reasonably clean" ${onboardingData.cleaniness === 'Reasonably clean' ? 'selected' : ''}>Reasonably clean</option>
+                                <option value="Relaxed" ${onboardingData.cleaniness === 'Relaxed' ? 'selected' : ''}>Relaxed</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button onclick="prevOnboardingStep(10)" class="btn-outline" style="flex: 1;">â Back</button>
+                            <button onclick="nextOnboardingStep(10)" class="btn-primary" style="flex: 1;">Next â</button>
+                        </div>
+                    `
+                },
+                11: {
+                    title: 'Work Schedule',
+                    content: `
+                        <div class="form-group">
+                            <label>Work Schedule</label>
+                            <select id="step11_schedule" required>
+                                <option value="">Select...</option>
+                                <option value="Day Shift" ${onboardingData.schedule === 'Day Shift' ? 'selected' : ''}>Day Shift</option>
+                                <option value="Night Shift" ${onboardingData.schedule === 'Night Shift' ? 'selected' : ''}>Night Shift</option>
+                                <option value="Shift Work (24/48)" ${onboardingData.schedule === 'Shift Work (24/48)' ? 'selected' : ''}>Shift Work (24/48)</option>
+                                <option value="Remote/Flexible" ${onboardingData.schedule === 'Remote/Flexible' ? 'selected' : ''}>Remote/Flexible</option>
+                                <option value="Hybrid" ${onboardingData.schedule === 'Hybrid' ? 'selected' : ''}>Hybrid</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Max Commute</label>
+                            <input type="number" id="step11_commute" value="${onboardingData.commuteMax || 30}" min="5" max="120" required>
+                            <small style="color: var(--gray-text);">minutes</small>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button onclick="prevOnboardingStep(11)" class="btn-outline" style="flex: 1;">â Back</button>
+                            <button onclick="nextOnboardingStep(11)" class="btn-primary" style="flex: 1;">Next â</button>
+                        </div>
+                    `
+                },
+                12: {
+                    title: 'Finish Profile',
+                    content: `
+                        <div style="text-align: center; padding: 2rem 0;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">â¨</div>
+                            <h3 style="color: var(--navy); margin-bottom: 1rem;">Profile Complete!</h3>
+                            <p style="color: var(--gray-text); margin-bottom: 2rem;">Let's find your perfect co-owner match.</p>
+                            <div style="display: flex; gap: 1rem;">
+                                <button onclick="prevOnboardingStep(12)" class="btn-outline" style="flex: 1;">â Back</button>
+                                <button onclick="completeOnboarding()" class="btn-primary" style="flex: 1;">Browse Matches â</button>
+                            </div>
+                        </div>
+                    `
+                }
+            };
+
+            const step = steps[onboardingStep];
+            title.textContent = step.title;
+            body.innerHTML = step.content;
+        }
+
+        function nextOnboardingStep(from) {
+            if (from === 1) {
+                onboardingData.firstName = document.getElementById('step1_firstName').value;
+                onboardingData.age = document.getElementById('step1_age').value;
+                onboardingData.gender = document.getElementById('step1_gender').value;
+            } else if (from === 2) {
+                onboardingData.profession = document.getElementById('step2_profession').value;
+                onboardingData.employer = document.getElementById('step2_employer').value;
+            } else if (from === 3) {
+                onboardingData.income = parseInt(document.getElementById('step3_income').value);
+            } else if (from === 4) {
+                onboardingData.county = document.getElementById('step4_county').value;
+                onboardingData.city = document.getElementById('step4_city').value;
+            } else if (from === 5) {
+                onboardingData.budget = parseInt(document.getElementById('step5_budget').value);
+            } else if (from === 6) {
+                onboardingData.propType = document.getElementById('step6_propType').value;
+                onboardingData.beds = document.getElementById('step6_beds').value;
+            } else if (from === 7) {
+                onboardingData.exitTimeline = document.getElementById('step7_exit').value;
+                onboardingData.renovationAppetite = document.getElementById('step7_renovation').value;
+            } else if (from === 8) {
+                onboardingData.bio = document.getElementById('step8_bio').value;
+            } else if (from === 9) {
+                onboardingData.hobbies = Array.from(document.querySelectorAll('.hobby-checkbox:checked')).map(x => x.value);
+            } else if (from === 10) {
+                onboardingData.noiseTolerance = document.getElementById('step10_noise').value;
+                onboardingData.sleepSchedule = document.getElementById('step10_sleep').value;
+                onboardingData.cleaniness = document.getElementById('step10_clean').value;
+            } else if (from === 11) {
+                onboardingData.schedule = document.getElementById('step11_schedule').value;
+                onboardingData.commuteMax = parseInt(document.getElementById('step11_commute').value);
+            }
+            onboardingStep++;
+            renderOnboardingStep();
+        }
+
+        function prevOnboardingStep(from) {
+            onboardingStep = from - 1;
+            renderOnboardingStep();
+        }
+
+        async function completeOnboarding() {
+            showSpinner();
+            try {
+                const { error } = await supabase.from('nexus_profiles').upsert({
+                    user_id: currentUser.id,
+                    first_name: onboardingData.firstName,
+                    last_name: currentUser.lastName,
+                    email: currentUser.email,
+                    age: onboardingData.age,
+                    gender: onboardingData.gender,
+                    profession: onboardingData.profession,
+                    employer: onboardingData.employer,
+                    income: onboardingData.income,
+                    county: onboardingData.county,
+                    city: onboardingData.city,
+                    budget: onboardingData.budget,
+                    prop_type: onboardingData.propType,
+                    beds: onboardingData.beds,
+                    exit_timeline: onboardingData.exitTimeline,
+                    renovation_appetite: onboardingData.renovationAppetite,
+                    bio: onboardingData.bio,
+                    hobbies: onboardingData.hobbies,
+                    noise_tolerance: onboardingData.noiseTolerance,
+                    sleep_schedule: onboardingData.sleepSchedule,
+                    cleanliness: onboardingData.cleaniness,
+                    schedule: onboardingData.schedule,
+                    commute_max: onboardingData.commuteMax,
+                    profile_complete: true
+                });
+
+                if (error) throw error;
+                currentProfile = { ...onboardingData, user_id: currentUser.id };
+                closeOnboarding();
+                showMatches();
+                showToast('Profile saved! Start browsing matches.', 'success');
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+            hideSpinner();
+        }
+
+        function renderMatches() {
+            const grid = document.getElementById('matchesGrid');
+            grid.innerHTML = SAMPLE_PROFILES.map(p => `
+                <div class="match-card" onclick="showProfile('${p.id}')">
+                    ${p.nexusLock ? '<div class="nexus-lock">ð</div>' : ''}
+                    <div class="match-header">
+                        <div class="match-avatar">${p.initials}</div>
+                        <div class="match-name">${p.name}</div>
+                        <div class="match-profession">${p.profession}</div>
+                        <div class="match-score high">${p.match}% Match</div>
+                    </div>
+                    <div class="match-body">
+                        <div class="match-location">ð ${p.city}, ${p.county}</div>
+                        <div class="match-bio">${p.bio}</div>
+                        <div class="match-cluster">${p.cluster}</div>
+                        <div class="match-hobbies">
+                            ${p.hobbies.slice(0, 4).map(h => `<span class="hobby-tag">${h}</span>`).join('')}
+                        </div>
+                        <div class="dimension-bars">
+                            <div class="bar">
+                                <span class="bar-label">Financial</span>
+                                <div class="bar-fill"><div class="bar-progress" style="width: ${p.dims.financial}%"></div></div>
+                                <span class="bar-percent">${p.dims.financial}%</span>
+                            </div>
+                            <div class="bar">
+                                <span class="bar-label">Location</span>
+                                <div class="bar-fill"><div class="bar-progress" style="width: ${p.dims.location}%"></div></div>
+                                <span class="bar-percent">${p.dims.location}%</span>
+                            </div>
+                            <div class="bar">
+                                <span class="bar-label">Lifestyle</span>
+                                <div class="bar-fill"><div class="bar-progress" style="width: ${p.dims.lifestyle}%"></div></div>
+                                <span class="bar-percent">${p.dims.lifestyle}%</span>
+                            </div>
+                            <div class="bar">
+                                <span class="bar-label">Profession</span>
+                                <div class="bar-fill"><div class="bar-progress" style="width: ${p.dims.profession}%"></div></div>
+                                <span class="bar-percent">${p.dims.profession}%</span>
+                            </div>
+                            <div class="bar">
+                                <span class="bar-label">Goals</span>
+                                <div class="bar-fill"><div class="bar-progress" style="width: ${p.dims.goals}%"></div></div>
+                                <span class="bar-percent">${p.dims.goals}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="match-footer">
+                        <div class="match-budget">${p.income} | ${p.budget.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</div>
+                        <button class="btn-small" onclick="event.stopPropagation(); showProfile('${p.id}')">Connect â</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showProfile(id) {
+            const p = SAMPLE_PROFILES.find(x => x.id === id);
+            const body = document.getElementById('profileBody');
+            body.innerHTML = `
+                <div class="profile-detail">
+                    <div class="profile-hero">
+                        <div class="profile-avatar">${p.initials}</div>
+                        <div class="profile-name">${p.name}</div>
+                        <div class="profile-info">${p.profession} Â· ${p.city}, ${p.county}</div>
+                        ${p.nexusLock ? '<div style="display: inline-block; background: var(--gold); color: var(--navy); padding: 0.5rem 1rem; border-radius: 20px; margin-top: 0.5rem; font-weight: 700; font-size: 0.9rem;">ð NexusLock Badge</div>' : ''}
+                        <div class="profile-score" style="margin-top: 1rem;">${p.match}% Match</div>
+                    </div>
+                    <div class="profile-content">
+                        <div class="profile-section">
+                            <h4>About</h4>
+                            <p>${p.bio}</p>
+                        </div>
+
+                        <div class="profile-section">
+                            <h4>Compatibility Scores</h4>
+                            <div class="compatibility-bars">
+                                <div class="compat-bar">
+                                    <div class="compat-label">Financial Alignment</div>
+                                    <div class="compat-fill"><div class="compat-progress" style="width: ${p.dims.financial}%; background: linear-gradient(90deg, var(--blue), var(--green));"></div></div>
+                                    <div class="compat-percent">${p.dims.financial}%</div>
+                                </div>
+                                <div class="compat-bar">
+                                    <div class="compat-label">Location</div>
+                                    <div class="compat-fill"><div class="compat-progress" style="width: ${p.dims.location}%; background: linear-gradient(90deg, var(--blue), var(--green));"></div></div>
+                                    <div class="compat-percent">${p.dims.location}%</div>
+                                </div>
+                                <div class="compat-bar">
+                                    <div class="compat-label">Lifestyle & Interests</div>
+                                    <div class="compat-fill"><div class="compat-progress" style="width: ${p.dims.lifestyle}%; background: linear-gradient(90deg, var(--blue), var(--green));"></div></div>
+                                    <div class="compat-percent">${p.dims.lifestyle}%</div>
+                                </div>
+                                <div class="compat-bar">
+                                    <div class="compat-label">Profession & Schedule</div>
+                                    <div class="compat-fill"><div class="compat-progress" style="width: ${p.dims.profession}%; background: linear-gradient(90deg, var(--blue), var(--green));"></div></div>
+                                    <div class="compat-percent">${p.dims.profession}%</div>
+                                </div>
+                                <div class="compat-bar">
+                                    <div class="compat-label">Co-Ownership Goals</div>
+                                    <div class="compat-fill"><div class="compat-progress" style="width: ${p.dims.goals}%; background: linear-gradient(90deg, var(--blue), var(--green));"></div></div>
+                                    <div class="compat-percent">${p.dims.goals}%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h4>Hobbies & Interests</h4>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                                ${p.hobbies.map(h => `<span class="hobby-tag">${h}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h4>Home Goals</h4>
+                            <div class="grid-2col">
+                                <div class="info-item">
+                                    <div class="info-label">Property Type</div>
+                                    <div class="info-value">Single Family</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Bedrooms</div>
+                                    <div class="info-value">3</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Budget</div>
+                                    <div class="info-value">${p.budget.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Timeline</div>
+                                    <div class="info-value">5-10 years</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h4>Lifestyle Cluster</h4>
+                            <div style="display: flex; align-items: center; gap: 1rem; background: var(--light-bg); padding: 1rem; border-radius: 6px;">
+                                <div style="font-size: 1.5rem;">ð¯</div>
+                                <div>
+                                    <div style="font-weight: 700; color: var(--navy);">${p.cluster}</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray-text);">Primary interest cluster</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <button class="btn-outline" style="flex: 1;" onclick="closeProfile()">â Back</button>
+                            <button class="btn-primary" style="flex: 1;" onclick="closeProfile(); showToast('Connection request sent!', 'success');">Connect & Message</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('profileModal').classList.add('active');
+        }
+
+        function closeProfile() {
+            document.getElementById('profileModal').classList.remove('active');
+        }
+
+        function showMatches() {
+            renderMatches();
+        }
+
+        function showSpinner() {
+            document.getElementById('spinner').classList.add('active');
+        }
+
+        function hideSpinner() {
+            document.getElementById('spinner').classList.remove('active');
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize
+        init();
+    </script>
 </body>
 </html>
