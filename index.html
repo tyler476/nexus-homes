@@ -1411,7 +1411,7 @@
         const SUPABASE_URL = 'https://tiwsuwbalvnrqsmudjfy.supabase.co';
         const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpd3N1d2JhbHVucnFzbXVkamZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MTExOTcsImV4cCI6MjA4NzE4NzE5N30.SKRaCBsG-ynDkPhZlOphPUj9SqKg-NGCdfcypAIwhk4';
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
         // State
         let currentUser = null;
@@ -1665,7 +1665,7 @@
                 const email = document.getElementById('regEmail').value;
                 const password = document.getElementById('regPassword').value;
 
-                const { data, error } = await supabase.auth.signUp({ email, password });
+                const { data, error } = await supabaseClient.auth.signUp({ email, password });
                 if (error) throw error;
 
                 currentUser = {
@@ -1692,10 +1692,10 @@
                 const email = document.getElementById('loginEmail').value;
                 const password = document.getElementById('loginPassword').value;
 
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (error) throw error;
 
-                const { data: profile } = await supabase.from('nexus_profiles').select('*').eq('user_id', data.user.id).single();
+                const { data: profile } = await supabaseClient.from('nexus_profiles').select('*').eq('user_id', data.user.id).single();
 
                 currentUser = {
                     id: data.user.id,
@@ -2065,7 +2065,7 @@
         async function completeOnboarding() {
             showSpinner();
             try {
-                const { error } = await supabase.from('nexus_profiles').upsert({
+                const { error } = await supabaseClient.from('nexus_profiles').upsert({
                     user_id: currentUser.id,
                     first_name: onboardingData.firstName,
                     last_name: currentUser.lastName,
